@@ -24,6 +24,15 @@ irc_motd(void *h, char *motd)
 
 /* PROTO */
 void
+irc_notice_auth(void *h, char *msg)
+{
+	eraseline();
+	printf("** %s\n", msg);
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_ready(void *h)
 {
 	bsfirc->ready = 1;

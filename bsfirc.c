@@ -87,6 +87,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_MODE, (void (*) (void *,...)) irc_mode);
 	irclib_register_callback(bsfirc->handle, IRCLIB_SERVER_NAME, (void (*) (void *,...)) irc_server_name);
 	irclib_register_callback(bsfirc->handle, IRCLIB_TOPIC, (void (*) (void *,...)) irc_topic);
+	irclib_register_callback(bsfirc->handle, IRCLIB_NOTICE_AUTH, (void (*) (void *,...)) irc_notice_auth);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_USERHOST, (void (*) (void *,...)) irc_whois_userhost);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_SERVER, (void (*) (void *,...)) irc_whois_server);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_CHANNELS, (void (*) (void *,...)) irc_whois_channels);
