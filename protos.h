@@ -1,0 +1,17 @@
+void get_input (void);
+void parse_input (void);
+void irc_motd (void *h, char *motd);
+void irc_ready (void *h);
+void irc_join (void *h, char *nick, char *host, char *channel);
+void irc_part (void *h, char *nick, char *host, char *channel);
+void irc_msg (void *h, char *nick, char *host, char *target, char *msg);
+void addts (void);
+void addts_short (void);
+void eraseline (void);
+void show_prompt (void);
+void sigwinch_handler (int a);
+void setup_tty (void);
+void restore_tty (void);
+void get_screen_size (void);
+void wordwrap_print (char *str, int offset);
+void wordwrap_print_echostr (char *str, char *echostr);
