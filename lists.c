@@ -28,7 +28,7 @@ show_channel_users(char *chan)
 
 				printf("%s [%c]", USERLIST_ECHOSTR, ch);
 				if(col < 2) {
-					printf(" %-16s\t", utr->name);
+					printf(" %-12s\t", utr->name);
 					col++;
 				} else {
 					printf(" %s\n", utr->name);

@@ -259,7 +259,8 @@ void
 irc_whois_channels(void *h, char *nick, char *channels)
 {
 	eraseline();
-	printf("** [%s] in: %s\n", nick, channels);
+	printf("** [%s] in: ", nick);
+	wordwrap_print(channels, 10+strlen(nick));
 	show_prompt();
 }
 
