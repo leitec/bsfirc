@@ -3,16 +3,40 @@
 
 #include <signal.h>
 
+#define chomp(x) { if(x[strlen(x)-2] == '\r') x[strlen(x)-2] = 0; else if(x[strlen(x)-1] == '\n') x[strlen(x)-1] = 0; }
+
 char inputbuf[513];
 int prompt_len;
 struct BSFirc *bsfirc;
 struct ChannelList *chanlist = NULL;
+struct Waiting *waiting = NULL;
 
 int main(int argc, char **argv)
 {
 	char *ircsrv, *ircnick, *ircname, *user;
 	fd_set readfs;
 	struct timeval tm;
+
+	ircsrv = getenv("IRCSERVER");
+	if(ircsrv == NULL) {
+		printf("** IRC server: ");
+		fgets(inputbuf, sizeof(inputbuf), stdin);
+		chomp(inputbuf);
+		ircsrv = strdup(inputbuf);
+	}
+
+	ircnick = getenv("IRCNICK");
+	if(ircnick == NULL) {
+		printf("** Nickname: ");
+		fgets(inputbuf, sizeof(inputbuf), stdin);
+		chomp(inputbuf);
+		ircnick = strdup(inputbuf);
+	}
+
+	ircname = getenv("IRCNAME");
+	if(ircname == NULL) {
+		ircname = strdup("bsfirc user");
+	}
 
 	setup_tty();
 	get_screen_size();
@@ -37,10 +61,10 @@ int main(int argc, char **argv)
 	bsfirc->lastchan = 0;
 	bsfirc->ready = 0;
 
-	ircsrv = getenv("IRCSERVER");
-	ircnick = getenv("IRCNICK");
-	ircname = getenv("IRCNAME");
 	user = getenv("USER");
+
+	if(user == NULL)
+		user = strdup("bsfirc");
 
 	bsfirc->handle = irclib_create_handle();
 	irclib_setnick(bsfirc->handle, ircnick);

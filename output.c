@@ -2,6 +2,7 @@
 
 extern int prompt_len;
 extern char inputbuf[513];
+extern struct Waiting *waiting;
 
 /* PROTO */
 void
@@ -45,7 +46,16 @@ eraseline(void)
 void
 show_prompt(void)
 {
+	struct Waiting *wtr;
+
 	prompt_len = strlen(BSF_PROMPT) + 1;
+
+	if(waiting != NULL) {
+		for(wtr = waiting; wtr != NULL; wtr = wtr->next) {
+			prompt_len += strlen(wtr->nick) + 3;
+			printf("[%s] ", wtr->nick);
+		}
+	}
 
 	printf("%s", BSF_PROMPT);
 	printf(" %s", inputbuf);

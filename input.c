@@ -2,12 +2,14 @@
 
 extern char     inputbuf[513];
 extern struct BSFirc *bsfirc;
+extern struct Waiting *waiting;
 
 /* PROTO */
 void
 get_input(void)
 {
 	unsigned char   inchr;
+	struct Waiting *wtmp, *wtmp2;
 
 	inchr = getchar();
 
@@ -17,6 +19,16 @@ get_input(void)
 		parse_input();
 		memset(inputbuf, 0, sizeof(inputbuf));
 		bsfirc->istyping = 0;
+
+		for(wtmp = waiting; wtmp != NULL; wtmp = wtmp->next) {
+			wtmp2 = wtmp;
+			wtmp = wtmp->next;
+			free(wtmp2->nick);
+			free(wtmp2);
+		}
+
+		waiting = NULL;
+			
 		show_prompt();
 		break;
 	case 21:

@@ -13,6 +13,11 @@ struct BSFirc {
 	int ready;
 };
 
+struct Waiting {
+	char *nick;
+	struct Waiting *next;
+};
+
 struct UserList {
 	char *name;
 	uint8_t mode;

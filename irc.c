@@ -1,6 +1,7 @@
 #include "bsfirc.h"
 
 extern struct BSFirc *bsfirc;
+extern struct Waiting *waiting;
 
 /* PROTO */
 void
@@ -167,7 +168,8 @@ irc_mode(void *h, char *nick, char *host, char *target, int plus, int mode, char
 void
 irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
-	int             offset;
+	int             offset, found = 0;
+	struct Waiting *wtr, *wtmp;
 
 	if (bsfirc->istyping == 0) {
 		if (target[0] == '#' || target[0] == '&') {
@@ -198,6 +200,25 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 		wordwrap_print(msg, offset);
 		log_event(EVENT_CHANMSG, nick, host, target, msg);
 	} else {
+		for(wtr = waiting; wtr != NULL; wtr = wtr->next) {
+			if(strcasecmp(wtr->nick, nick) == 0) {
+				found = 1;
+				break;
+			}
+		}
+
+		if(!found) {
+			wtmp = malloc(sizeof(struct Waiting));
+			wtmp->next = NULL;
+			wtmp->nick = strdup(nick);
+			if(waiting == NULL) {
+				waiting = wtmp;
+			} else {
+				for(wtr = waiting; wtr->next != NULL; wtr = wtr->next);
+				wtr->next = wtmp;
+			}
+		}
+
 #ifdef TIMESTAMPS
 		addts();
 		putchar(' ');
