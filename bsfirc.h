@@ -19,9 +19,9 @@ struct UserList {
 	struct UserList *next;
 };
 
-#define MODE_NONE  0x00000000
-#define MODE_VOICE 0x00000001
-#define MODE_OP    0x00000010
+#define MODE_NONE  0x00
+#define MODE_VOICE 0x01
+#define MODE_OP    0x02
 
 struct ChannelList {
 	char *chan;

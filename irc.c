@@ -147,6 +147,24 @@ irc_ctcp(void *h, char *nick, char *host, char *target, char *msg)
 
 /* PROTO */
 void
+irc_mode(void *h, char *nick, char *host, char *target, int plus, int mode, char *arg)
+{
+	eraseline();
+
+	switch(mode) {
+	case C_MODE_OP:
+		change_user_mode(arg, target, plus, C_MODE_OP);
+		printf("** ");
+		addts();
+		printf(" %s has been %s on %s by %s.\n", arg, (plus == 1 ? "opped" : "deopped"), target, nick);
+		break;
+	}
+
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
 	int             offset;

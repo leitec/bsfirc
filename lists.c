@@ -104,6 +104,32 @@ process_quit(char *name, char *msg)
 		}
 	}
 }
+
+/* PROTO */
+void
+change_user_mode(char *name, char *chan, int plus, int mode)
+{
+	struct ChannelList *tr;
+	struct UserList *utr;
+
+	for(tr = chanlist; tr != NULL; tr = tr->next) {
+		if(strcasecmp(chan, tr->chan) == 0) {
+			for(utr = tr->users; utr != NULL; utr = utr->next) {
+				if(strcasecmp(name, utr->name) == 0) {
+					if(mode == C_MODE_OP) {
+						if(plus == 1) 
+							utr->mode |= MODE_OP;
+						else
+							utr->mode ^= MODE_OP;
+					}
+
+					break;
+				}
+			}
+		}
+	}
+}
+
 /* PROTO */
 void
 add_channel_user(char *name, char *chan, uint8_t mode)
