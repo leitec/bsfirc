@@ -28,6 +28,14 @@ irc_join(void *h, char *nick, char *host, char *channel)
 	addts();
 	printf(" %s has joined %s.\n", nick, channel);
 	log_event(EVENT_CHANJOIN, nick, host, channel, NULL);
+
+	if(strcasecmp(bsfirc->nick, nick) == 0) {
+		if(bsfirc->lastchan != NULL)
+			free(bsfirc->lastchan);
+
+		bsfirc->lastchan = strdup(channel);
+	}
+
 	show_prompt();
 }
 

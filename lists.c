@@ -10,13 +10,21 @@ show_channel_users(char *chan)
 	struct ChannelList *tr;
 	struct UserList *utr;
 	int first;
+	uint8_t ch;
 
 	for(tr = chanlist; tr != NULL; tr = tr->next) {
 		if(strcasecmp(tr->chan, chan) == 0) {
 			addts();
 			printf(" Users in %s:\n", tr->chan);
 			for(utr = tr->users, first = 1; utr != NULL; utr = utr->next) {
-				printf("%s", USERLIST_ECHOSTR);
+				if(utr->mode == MODE_OP)
+					ch = '@';
+				else if(utr->mode == MODE_VOICE)
+					ch = '+';
+				else
+					ch = ' ';
+
+				printf("%s [%c]", USERLIST_ECHOSTR, ch);
 				if(first) {
 					printf(" %-16s\t", utr->name);
 					first = 0;
