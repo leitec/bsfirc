@@ -103,6 +103,8 @@ parse_input(void)
 		restore_tty();
 		printf("\n");
 		exit(-1);
+	} else if (inputbuf[0] == 'i') {
+		irclib_whois(bsfirc->handle, inputbuf+1);
 	} else if (inputbuf[0] == 'm') {
 		char           *pptr, *pptr2, *dest;
 		int             offset;

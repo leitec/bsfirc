@@ -12,6 +12,8 @@ show_channel_users(char *chan)
 	int col;
 	uint8_t ch;
 
+	printf("** ");
+
 	for(tr = chanlist; tr != NULL; tr = tr->next) {
 		if(strcasecmp(tr->chan, chan) == 0) {
 			addts();

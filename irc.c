@@ -5,6 +5,16 @@ extern struct Waiting *waiting;
 
 /* PROTO */
 void
+irc_topic(void *h, char *chan, char *topic)
+{
+	eraseline();
+	printf("** Topic for %s: ", chan);
+	wordwrap_print(topic, 15+strlen(chan));
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_motd(void *h, char *motd)
 {
 	eraseline();
@@ -232,5 +242,32 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 		log_event(EVENT_PRIVMSG, nick, host, target, msg);
 	}
 
+	show_prompt();
+}
+
+/* PROTO */
+void
+irc_whois_userhost(void *h, char *nick, char *user, char *host, char *name)
+{
+	eraseline();
+	printf("** [%s] %s@%s (%s)\n", nick, user, host, name);
+	show_prompt();
+}
+
+/* PROTO */
+void
+irc_whois_channels(void *h, char *nick, char *channels)
+{
+	eraseline();
+	printf("** [%s] In %s\n", nick, channels);
+	show_prompt();
+}
+
+/* PROTO */
+void
+irc_whois_server(void *h, char *nick, char *server, char *serverdescr)
+{
+	eraseline();
+	printf("** [%s] Using %s (%s)\n", nick, server, serverdescr);
 	show_prompt();
 }
