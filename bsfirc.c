@@ -1,4 +1,5 @@
 #include "bsfirc.h"
+#include <signal.h>
 
 #include <signal.h>
 

@@ -27,7 +27,7 @@ addts_short(void)
 
 	t = time(0);
 	now = localtime(&t);
-	strftime(ts, 5, "%H:%M", now);
+	strftime(ts, 6, "%H:%M", now);
 	printf("%s", ts);
 }
 

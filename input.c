@@ -127,7 +127,7 @@ parse_input(void)
 #else
 			offset = 0;
 #endif
-			printf("%s] %s> ", dest, bsfirc->nick);
+			printf("%s] %s: ", dest, bsfirc->nick);
 			offset += strlen(dest) + strlen(bsfirc->nick) + 5;
 			wordwrap_print(pptr+1, offset);
 		} else {
