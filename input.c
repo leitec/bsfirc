@@ -139,8 +139,8 @@ parse_input(void)
 #else
 			offset = 0;
 #endif
-			printf("%s] %s: ", dest, bsfirc->nick);
-			offset += strlen(dest) + strlen(bsfirc->nick) + 5;
+			printf("%s] (%s) ", dest, bsfirc->nick);
+			offset += strlen(dest) + strlen(bsfirc->nick) + 6;
 			wordwrap_print(pptr+1, offset);
 			log_event(EVENT_CHANMSG, bsfirc->nick, NULL, dest, pptr+1);
 		} else {

@@ -194,9 +194,9 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 #else
 		offset = 0;
 #endif
-		printf("%s] %s: ", target, nick);
+		printf("%s] (%s) ", target, nick);
 
-		offset += strlen(target) + strlen(nick) + 5;
+		offset += strlen(target) + strlen(nick) + 6;
 		wordwrap_print(msg, offset);
 		log_event(EVENT_CHANMSG, nick, host, target, msg);
 	} else {
