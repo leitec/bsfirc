@@ -78,6 +78,34 @@ delete_channel_user(char *name, char *chan)
 
 /* PROTO */
 void
+process_quit(char *name, char *msg)
+{
+	struct ChannelList *tr;
+	struct UserList *utr, *tmp;
+
+	for(tr = chanlist; tr != NULL; tr = tr->next) {
+		if(strcasecmp(tr->users->name, name) == 0) {
+			tmp = tr->users;
+			tr->users = tr->users->next;
+			free(tmp->name);
+			free(tmp);
+			log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+		} else {
+			for(utr = tr->users; utr->next != NULL; utr = utr->next) {
+				if(strcasecmp(utr->next->name, name) == 0) {
+					tmp = utr->next;
+					utr->next = utr->next->next;
+					free(tmp->name);
+					free(tmp);
+					log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+					break;
+				}
+			}
+		}
+	}
+}
+/* PROTO */
+void
 add_channel_user(char *name, char *chan, uint8_t mode)
 {
 	struct ChannelList *tr, *p;

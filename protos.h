@@ -10,6 +10,7 @@ void irc_quit (void *h, char *nick, char *msg);
 void irc_msg (void *h, char *nick, char *host, char *target, char *msg);
 void show_channel_users (char *chan);
 void delete_channel_user (char *name, char *chan);
+void process_quit (char *name, char *msg);
 void add_channel_user (char *name, char *chan, uint8_t mode);
 int open_log_dir (void);
 void log_event (int event_type, char *name, char *host, char *chan, char *msg);

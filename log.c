@@ -91,7 +91,8 @@ log_event(int event_type, char *name, char *host, char *chan, char *msg)
 
 	if(event_type == EVENT_CHANMSG ||
            event_type == EVENT_CHANJOIN ||
-	   event_type == EVENT_CHANPART)
+	   event_type == EVENT_CHANPART ||
+	   event_type == EVENT_QUIT)
 		sprintf(user_log, "%s/%s.log", logpath, chan);
 	else	
 		sprintf(user_log, "%s/%s.log", logpath, name);
@@ -116,6 +117,9 @@ log_event(int event_type, char *name, char *host, char *chan, char *msg)
 		break;
 	case EVENT_CHANMSG:
 		fprintf(logfile, "%s: <%s> %s\n", ts, name, msg);
+		break;
+	case EVENT_QUIT:
+		fprintf(logfile, "%s: %s has quit: %s\n", ts, name, msg);
 		break;
 	case EVENT_SENDPRIVMSG:
 		fprintf(logfile, "%s: -> %s\n", ts, msg);

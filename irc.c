@@ -86,6 +86,12 @@ irc_quit(void *h, char *nick, char *msg)
 	printf("** ");
 	addts();
 	printf(" %s has quit: %s\n", nick, msg);
+
+	/*
+	 * This also handles writing to the logs 
+	 */
+	process_quit(nick, msg);
+	
 	show_prompt();
 }
 
