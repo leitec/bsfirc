@@ -1,8 +1,11 @@
 #include "bsfirc.h"
 
+#include <signal.h>
+
 char inputbuf[513];
 int prompt_len;
 struct BSFirc *bsfirc;
+
 
 int main(int argc, char **argv)
 {
