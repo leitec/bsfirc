@@ -20,5 +20,5 @@ enum {
 	EVENT_SENDPRIVMSG
 };
 
-#define BSF_PROMPT "\\\\"
+#define BSF_PROMPT "||"
 #include "protos.h"
