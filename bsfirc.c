@@ -110,7 +110,10 @@ int main(int argc, char **argv)
 
 		FD_ZERO(&readfs);
 		FD_SET(0, &readfs);
-		irclib_select(1, &readfs, NULL, NULL, &tm);
+		if(irclib_select(1, &readfs, NULL, NULL, &tm) != IRCLIB_RET_OK) {
+			if(errno == EINTR)
+				continue;
+		}
 
 		if(FD_ISSET(0, &readfs)) {
 			get_input();
