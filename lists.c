@@ -13,7 +13,6 @@ show_channel_users(char *chan)
 
 	for(tr = chanlist; tr != NULL; tr = tr->next) {
 		if(strcasecmp(tr->chan, chan) == 0) {
-			printf("\n");
 			addts();
 			printf(" Users in %s:\n", tr->chan);
 			for(utr = tr->users, first = 1; utr != NULL; utr = utr->next) {
@@ -26,6 +25,10 @@ show_channel_users(char *chan)
 					first = 1;
 				}
 			}
+
+			if(!first)
+				printf("\n");
+				
 			break;
 		}
 	}

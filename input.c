@@ -155,10 +155,15 @@ parse_input(void)
 		irclib_part(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'w') {
 		if(inputbuf[1] == 0) {
-			if(bsfirc->lastchan != NULL)
+			if(bsfirc->lastchan != NULL) {
+				printf("\n");
 				show_channel_users(bsfirc->lastchan);
+				return;
+			}
 		} else {
+			printf("\n");
 			show_channel_users(inputbuf+1);
+			return;
 		}
 	}
 

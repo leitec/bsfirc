@@ -3,6 +3,8 @@ void parse_input (void);
 void irc_motd (void *h, char *motd);
 void irc_ready (void *h);
 void irc_join (void *h, char *nick, char *host, char *channel);
+void irc_addchanuser (void *h, char *chan, char *nick);
+void irc_namesdone (void *h, char *chan);
 void irc_part (void *h, char *nick, char *host, char *channel);
 void irc_quit (void *h, char *nick, char *msg);
 void irc_msg (void *h, char *nick, char *host, char *target, char *msg);

@@ -33,6 +33,31 @@ irc_join(void *h, char *nick, char *host, char *channel)
 
 /* PROTO */
 void
+irc_addchanuser(void *h, char *chan, char *nick)
+{
+	if(nick[0] == '@') {
+		add_channel_user(nick+1, chan, MODE_OP);
+	} else if(nick[0] == '+') {
+		add_channel_user(nick+1, chan, MODE_VOICE);
+	} else {
+		add_channel_user(nick, chan, 0);
+	}
+}
+
+/* PROTO */
+void
+irc_namesdone(void *h, char *chan)
+{
+	eraseline();
+
+	show_channel_users(chan);
+	
+	show_prompt();
+}
+
+
+/* PROTO */
+void
 irc_part(void *h, char *nick, char *host, char *channel)
 {
 	delete_channel_user(nick, channel);
