@@ -20,7 +20,7 @@ get_input(void)
 		memset(inputbuf, 0, sizeof(inputbuf));
 		bsfirc->istyping = 0;
 
-		for(wtmp = waiting; wtmp != NULL; wtmp = wtmp->next) {
+		for(wtmp = waiting; wtmp != NULL;) {
 			wtmp2 = wtmp;
 			wtmp = wtmp->next;
 			free(wtmp2->nick);
