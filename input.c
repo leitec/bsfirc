@@ -107,7 +107,7 @@ parse_input(void)
 		strncpy(dest, pptr2, pptr - pptr2);
 		irclib_privmsg(bsfirc->handle, dest, pptr + 1);
 
-		if(dest[0] == '#') {
+		if(dest[0] == '#' || dest[0] == '&') {
 			if(bsfirc->lastchan != NULL)
 				free(bsfirc->lastchan);
 			bsfirc->lastchan = strdup(dest);
@@ -118,7 +118,7 @@ parse_input(void)
 		}
 		
 		eraseline();
-		if(dest[0] == '#') {
+		if(dest[0] == '#' || dest[0] == '&') {
 			putchar('[');
 #ifdef TIMESTAMPS_CHANMSG
 			addts_short();

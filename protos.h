@@ -8,6 +8,7 @@ void irc_namesdone (void *h, char *chan);
 void irc_part (void *h, char *nick, char *host, char *channel);
 void irc_quit (void *h, char *nick, char *msg);
 void irc_nickinuse (void *h, char *nick);
+void irc_ctcp (void *h, char *nick, char *host, char *target, char *msg);
 void irc_msg (void *h, char *nick, char *host, char *target, char *msg);
 void show_channel_users (char *chan);
 void delete_channel_user (char *name, char *chan);

@@ -120,6 +120,30 @@ irc_nickinuse(void *h, char *nick)
 	show_prompt();
 }
 		
+/* PROTO */
+void
+irc_ctcp(void *h, char *nick, char *host, char *target, char *msg)
+{
+	int offset;
+
+	eraseline();
+
+	if(strncmp(msg, "ACTION ", 7) == 0) {
+		putchar('[');
+#ifdef TIMESTAMPS
+		addts_short();
+		putchar('/');
+		offset = 6;
+#else
+		offset = 0;
+#endif
+		printf("%s] * %s ", target, nick);
+		offset += strlen(target) + strlen(nick) + 6;
+		wordwrap_print(msg+7, offset);
+	}
+
+	show_prompt();
+}
 
 /* PROTO */
 void
@@ -128,7 +152,7 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 	int             offset;
 
 	if (bsfirc->istyping == 0) {
-		if (target[0] == '#') {
+		if (target[0] == '#' || target[0] == '&') {
 			if (bsfirc->lastchan != 0)
 				free(bsfirc->lastchan);
 			bsfirc->lastchan = strdup(target);
@@ -141,7 +165,7 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 	}
 	eraseline();
 
-	if (target[0] == '#') {
+	if (target[0] == '#' || target[0] == '&') {
 		putchar('[');
 #ifdef TIMESTAMPS_CHANMSG
 		addts_short();
