@@ -12,5 +12,13 @@ struct BSFirc {
 	int istyping;
 };
 
-#define BSF_PROMPT "::"
+enum {
+	EVENT_PRIVMSG,
+	EVENT_CHANJOIN,
+	EVENT_CHANPART,
+	EVENT_CHANMSG,
+	EVENT_SENDPRIVMSG
+};
+
+#define BSF_PROMPT "\\\\"
 #include "protos.h"

@@ -19,7 +19,7 @@ LIBS=-lirc
 #LIBS+=-lwsock32
 LDFLAGS=-s -Lirclib/
 #LDFLAGS+=-L/usr/local/djgpp/watt/lib
-OBJECTS=bsfirc.o screen.o output.o irc.o input.o
+OBJECTS=bsfirc.o screen.o output.o irc.o input.o log.o
 
 all:
 	(cd irclib && $(MAKE) $(MFLAGS))

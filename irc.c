@@ -25,6 +25,7 @@ irc_join(void *h, char *nick, char *host, char *channel)
 	printf("** ");
 	addts();
 	printf(" %s has joined %s.\n", nick, channel);
+	log_event(EVENT_CHANJOIN, nick, host, channel, NULL);
 	show_prompt();
 }
 
@@ -36,6 +37,7 @@ irc_part(void *h, char *nick, char *host, char *channel)
 	printf("** ");
 	addts();
 	printf(" %s has left %s.\n", nick, channel);
+	log_event(EVENT_CHANPART, nick, host, channel, NULL);
 	show_prompt();
 }
 
@@ -83,6 +85,7 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 
 		offset += strlen(target) + strlen(nick) + 5;
 		wordwrap_print(msg, offset);
+		log_event(EVENT_CHANMSG, nick, host, target, msg);
 	} else {
 #ifdef TIMESTAMPS
 		addts();
@@ -94,6 +97,7 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 		printf("%s: ", nick);
 		offset += strlen(nick) + 2;
 		wordwrap_print(msg, offset);
+		log_event(EVENT_PRIVMSG, nick, host, target, msg);
 	}
 
 	show_prompt();

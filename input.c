@@ -130,6 +130,7 @@ parse_input(void)
 			printf("%s] %s: ", dest, bsfirc->nick);
 			offset += strlen(dest) + strlen(bsfirc->nick) + 5;
 			wordwrap_print(pptr+1, offset);
+			log_event(EVENT_CHANMSG, bsfirc->nick, NULL, dest, pptr+1);
 		} else {
 #ifdef TIMESTAMPS
 		addts();
@@ -143,6 +144,7 @@ parse_input(void)
 		printf("->%s", dest);
 		printf(": ");
 		wordwrap_print(pptr + 1, offset);
+		log_event(EVENT_PRIVMSG, dest, NULL, NULL, pptr+1);
 		}
 
 		free(dest);

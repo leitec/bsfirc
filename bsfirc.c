@@ -10,7 +10,7 @@ struct BSFirc *bsfirc;
 
 int main(int argc, char **argv)
 {
-	char *ircsrv, *ircnick;
+	char *ircsrv, *ircnick, *ircname, *user;
 	fd_set readfs;
 	struct timeval tm;
 
@@ -38,9 +38,13 @@ int main(int argc, char **argv)
 
 	ircsrv = getenv("IRCSERVER");
 	ircnick = getenv("IRCNICK");
+	ircname = getenv("IRCNAME");
+	user = getenv("USER");
 
 	bsfirc->handle = irclib_create_handle();
 	irclib_setnick(bsfirc->handle, ircnick);
+	irclib_setname(bsfirc->handle, ircname);
+	irclib_setusername(bsfirc->handle, user);
 	bsfirc->nick = strdup(ircnick);
 
 	irclib_register_callback(bsfirc->handle, IRCLIB_MOTD, (void (*) (void *,...)) irc_motd);
@@ -49,6 +53,8 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_PART, (void (*) (void *,...)) irc_part);
 	irclib_register_callback(bsfirc->handle, IRCLIB_PRIVMSG, (void (*) (void *,...)) irc_msg);
 	irclib_register_callback(bsfirc->handle, IRCLIB_QUIT, (void (*) (void *,...)) irc_quit);
+
+	open_log_dir();
 
 	printf("** bsfirc started.\n");
 	printf("** Server set to %s.\n", ircsrv);
