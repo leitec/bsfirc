@@ -41,6 +41,17 @@ irc_part(void *h, char *nick, char *host, char *channel)
 
 /* PROTO */
 void
+irc_quit(void *h, char *nick, char *msg)
+{
+	eraseline();
+	printf("** ");
+	addts();
+	printf(" %s has quit: %s.\n", nick, msg);
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
 	int             offset;

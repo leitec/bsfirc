@@ -4,6 +4,7 @@ void irc_motd (void *h, char *motd);
 void irc_ready (void *h);
 void irc_join (void *h, char *nick, char *host, char *channel);
 void irc_part (void *h, char *nick, char *host, char *channel);
+void irc_quit (void *h, char *nick, char *msg);
 void irc_msg (void *h, char *nick, char *host, char *target, char *msg);
 void addts (void);
 void addts_short (void);

@@ -48,6 +48,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_JOIN, (void (*) (void *,...)) irc_join);
 	irclib_register_callback(bsfirc->handle, IRCLIB_PART, (void (*) (void *,...)) irc_part);
 	irclib_register_callback(bsfirc->handle, IRCLIB_PRIVMSG, (void (*) (void *,...)) irc_msg);
+	irclib_register_callback(bsfirc->handle, IRCLIB_QUIT, (void (*) (void *,...)) irc_quit);
 
 	printf("** bsfirc started.\n");
 	printf("** Server set to %s.\n", ircsrv);
