@@ -179,6 +179,16 @@ parse_input(void)
 			show_channel_users(inputbuf+1);
 			return;
 		}
+	} else if(inputbuf[0] == '?' || inputbuf[0] == 'h') {
+		printf("\n** bsfirc commands:\n");
+		printf("   j<chan>        : join <chan>\n");
+		printf("   p<chan>        : leave <chan>\n");
+		printf("   m<rec> <msg>   : send <msg> to <rec> (channel or user)\n");
+		printf("   c<msg>         : reply to last channel message\n");
+		printf("   r<msg>         : reply to last private message\n");
+		printf("   w              : show who is in the channel\n");
+		printf("   i<nick>        : whois <nick>\n");
+		printf("   q!             : quit");
 	}
 
 	printf("\n");
