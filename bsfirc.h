@@ -9,6 +9,7 @@ struct BSFirc {
 	char *lastmsg;
 	char *lastchan;
 	char *nick;
+	char *server;
 	int istyping;
 	int ready;
 };

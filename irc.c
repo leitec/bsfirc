@@ -31,6 +31,16 @@ irc_ready(void *h)
 
 /* PROTO */
 void
+irc_server_name(void *h, char *name)
+{
+	if(bsfirc->server != NULL)
+		free(bsfirc->server);
+
+	bsfirc->server = strdup(name);
+}
+
+/* PROTO */
+void
 irc_join(void *h, char *nick, char *host, char *channel)
 {
 	add_channel_user(nick, channel, 0);

@@ -60,6 +60,7 @@ int main(int argc, char **argv)
 	bsfirc->lastmsg = 0;
 	bsfirc->lastchan = 0;
 	bsfirc->ready = 0;
+	bsfirc->server = NULL;
 
 	user = getenv("USER");
 
@@ -84,6 +85,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_NICKINUSE, (void (*) (void *,...)) irc_nickinuse);
 	irclib_register_callback(bsfirc->handle, IRCLIB_CTCP, (void (*) (void *,...)) irc_ctcp);
 	irclib_register_callback(bsfirc->handle, IRCLIB_MODE, (void (*) (void *,...)) irc_mode);
+	irclib_register_callback(bsfirc->handle, IRCLIB_SERVER_NAME, (void (*) (void *,...)) irc_server_name);
 	irclib_register_callback(bsfirc->handle, IRCLIB_TOPIC, (void (*) (void *,...)) irc_topic);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_USERHOST, (void (*) (void *,...)) irc_whois_userhost);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_SERVER, (void (*) (void *,...)) irc_whois_server);

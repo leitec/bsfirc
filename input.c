@@ -181,6 +181,12 @@ parse_input(void)
 			show_channel_users(inputbuf+1);
 			return;
 		}
+	} else if(inputbuf[0] == 'W') {
+		printf("\n** ");
+		addts();
+		printf(" %s", bsfirc->nick);
+		if(bsfirc->server != NULL)
+			printf(" on %s", bsfirc->server);
 	} else if(inputbuf[0] == '?' || inputbuf[0] == 'h') {
 		printf("\n** bsfirc commands:\n");
 		printf("   j<chan>        : join <chan>\n");
@@ -192,6 +198,7 @@ parse_input(void)
 		printf("   [TAB]<msg>     : same as r\n");
 		printf("   w              : show who is in the channel\n");
 		printf("   i<nick>        : whois <nick>\n");
+		printf("   W              : show your nickname and server\n");
 		printf("   q!             : quit");
 	}
 
