@@ -46,7 +46,7 @@ irc_quit(void *h, char *nick, char *msg)
 	eraseline();
 	printf("** ");
 	addts();
-	printf(" %s has quit: %s.\n", nick, msg);
+	printf(" %s has quit: %s\n", nick, msg);
 	show_prompt();
 }
 
