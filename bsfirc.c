@@ -6,7 +6,7 @@
 char inputbuf[513];
 int prompt_len;
 struct BSFirc *bsfirc;
-
+struct ChannelList *chanlist = NULL;
 
 int main(int argc, char **argv)
 {

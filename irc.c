@@ -21,6 +21,8 @@ irc_ready(void *h)
 void
 irc_join(void *h, char *nick, char *host, char *channel)
 {
+	add_channel_user(nick, channel, 0);
+
 	eraseline();
 	printf("** ");
 	addts();
@@ -33,6 +35,8 @@ irc_join(void *h, char *nick, char *host, char *channel)
 void
 irc_part(void *h, char *nick, char *host, char *channel)
 {
+	delete_channel_user(nick, channel);
+
 	eraseline();
 	printf("** ");
 	addts();
