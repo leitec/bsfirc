@@ -15,6 +15,7 @@ irc_motd(void *h, char *motd)
 void
 irc_ready(void *h)
 {
+	bsfirc->ready = 1;
 }
 
 /* PROTO */
@@ -94,6 +95,31 @@ irc_quit(void *h, char *nick, char *msg)
 	
 	show_prompt();
 }
+
+/* PROTO */
+void
+irc_nickinuse(void *h, char *nick)
+{
+	size_t notreallyrandomvalue;
+
+	eraseline();
+	printf("** %s: Nickname already in use.\n", nick);
+
+	if(bsfirc->ready == 0) {
+		char *newnick = strdup(nick);
+		notreallyrandomvalue = (size_t)time(NULL) % strlen(bsfirc->nick);
+		newnick[notreallyrandomvalue] = 'A'+notreallyrandomvalue;
+		printf("** Trying \"%s\"\n", newnick);
+		irclib_setnick(h, newnick);
+		if(bsfirc->nick != NULL) 
+			free(bsfirc->nick);
+
+		bsfirc->nick = newnick;
+	}
+
+	show_prompt();
+}
+		
 
 /* PROTO */
 void

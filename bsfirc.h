@@ -10,6 +10,7 @@ struct BSFirc {
 	char *lastchan;
 	char *nick;
 	int istyping;
+	int ready;
 };
 
 struct UserList {

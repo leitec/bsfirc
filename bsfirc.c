@@ -35,6 +35,7 @@ int main(int argc, char **argv)
 	bsfirc->istyping = 0;
 	bsfirc->lastmsg = 0;
 	bsfirc->lastchan = 0;
+	bsfirc->ready = 0;
 
 	ircsrv = getenv("IRCSERVER");
 	ircnick = getenv("IRCNICK");
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_QUIT, (void (*) (void *,...)) irc_quit);
 	irclib_register_callback(bsfirc->handle, IRCLIB_CHANUSER, (void (*) (void *,...)) irc_addchanuser);
 	irclib_register_callback(bsfirc->handle, IRCLIB_NAMESDONE, (void (*) (void *,...)) irc_namesdone);
+	irclib_register_callback(bsfirc->handle, IRCLIB_NICKINUSE, (void (*) (void *,...)) irc_nickinuse);
 
 	open_log_dir();
 
