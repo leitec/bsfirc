@@ -176,6 +176,27 @@ irc_mode(void *h, char *nick, char *host, char *target, int plus, int mode, char
 
 /* PROTO */
 void
+irc_notice(void *h, char *nick, char *host, char *msg)
+{
+	int offset;
+
+	eraseline();
+#ifdef TIMESTAMPS
+	addts();
+	putchar(' ');
+	offset = 11;
+#else
+	offset = 0;
+#endif
+	printf("!%s! ", nick);
+	offset += 3 + strlen(nick);
+
+	wordwrap_print(msg, offset);
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
 	int             offset, found = 0;

@@ -60,16 +60,18 @@ get_input(void)
 		fflush(stdout);
 		break;
 	case 'r':
+	case '\'':
 	case 'c':
+	case '\t':
 		if (inputbuf[0] == 0) {
-			if (inchr == 'r') {
+			if (inchr == 'r' || inchr == '\t') {
 				if (bsfirc->lastmsg) {
 					printf("m%s ", bsfirc->lastmsg);
 					bsfirc->istyping = 1;
 					sprintf(inputbuf, "m%s ", bsfirc->lastmsg);
 					fflush(stdout);
 				}
-			} else if (inchr == 'c') {
+			} else if (inchr == 'c' || inchr == '\'') {
 				if (bsfirc->lastchan) {
 					printf("m%s ", bsfirc->lastchan);
 					bsfirc->istyping = 1;
@@ -185,7 +187,9 @@ parse_input(void)
 		printf("   p<chan>        : leave <chan>\n");
 		printf("   m<rec> <msg>   : send <msg> to <rec> (channel or user)\n");
 		printf("   c<msg>         : reply to last channel message\n");
+		printf("   '<msg>         : same as c\n");
 		printf("   r<msg>         : reply to last private message\n");
+		printf("   [TAB]<msg>     : same as r\n");
 		printf("   w              : show who is in the channel\n");
 		printf("   i<nick>        : whois <nick>\n");
 		printf("   q!             : quit");

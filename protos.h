@@ -11,6 +11,7 @@ void irc_quit (void *h, char *nick, char *msg);
 void irc_nickinuse (void *h, char *nick);
 void irc_ctcp (void *h, char *nick, char *host, char *target, char *msg);
 void irc_mode (void *h, char *nick, char *host, char *target, int plus, int mode, char *arg);
+void irc_notice (void *h, char *nick, char *host, char *msg);
 void irc_msg (void *h, char *nick, char *host, char *target, char *msg);
 void irc_whois_userhost (void *h, char *nick, char *user, char *host, char *name);
 void irc_whois_channels (void *h, char *nick, char *channels);

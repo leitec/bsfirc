@@ -79,6 +79,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_PRIVMSG, (void (*) (void *,...)) irc_msg);
 	irclib_register_callback(bsfirc->handle, IRCLIB_QUIT, (void (*) (void *,...)) irc_quit);
 	irclib_register_callback(bsfirc->handle, IRCLIB_CHANUSER, (void (*) (void *,...)) irc_addchanuser);
+	irclib_register_callback(bsfirc->handle, IRCLIB_NOTICE, (void (*) (void *,...)) irc_notice);
 	irclib_register_callback(bsfirc->handle, IRCLIB_NAMESDONE, (void (*) (void *,...)) irc_namesdone);
 	irclib_register_callback(bsfirc->handle, IRCLIB_NICKINUSE, (void (*) (void *,...)) irc_nickinuse);
 	irclib_register_callback(bsfirc->handle, IRCLIB_CTCP, (void (*) (void *,...)) irc_ctcp);
