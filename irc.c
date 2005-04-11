@@ -220,6 +220,9 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
 	int             offset, found = 0;
 	struct Waiting *wtr, *wtmp;
+#ifdef NETSPEAK_CLEANER
+	char *cleanmsg = undo_netspeak(msg);
+#endif
 
 	if (bsfirc->istyping == 0) {
 		if (target[0] == '#' || target[0] == '&') {
@@ -247,7 +250,11 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 		printf("%s] (%s) ", target, nick);
 
 		offset += strlen(target) + strlen(nick) + 6;
+#ifdef NETSPEAK_CLEANER
+		wordwrap_print(cleanmsg, offset);
+#else
 		wordwrap_print(msg, offset);
+#endif
 		log_event(EVENT_CHANMSG, nick, host, target, msg);
 	} else {
 		for(wtr = waiting; wtr != NULL; wtr = wtr->next) {
@@ -278,10 +285,17 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 #endif
 		printf("%s: ", nick);
 		offset += strlen(nick) + 2;
+#ifdef NETSPEAK_CLEANER
+		wordwrap_print(cleanmsg, offset);
+#else
 		wordwrap_print(msg, offset);
+#endif
 		log_event(EVENT_PRIVMSG, nick, host, target, msg);
 	}
 
+#ifdef NETSPEAK_CLEANER
+	free(cleanmsg);
+#endif
 	show_prompt();
 }
 

@@ -110,6 +110,9 @@ parse_input(void)
 	} else if (inputbuf[0] == 'm') {
 		char           *pptr, *pptr2, *dest;
 		int             offset;
+#ifdef NETSPEAK_CLEANER
+		char		*cleanmsg;
+#endif
 
 		pptr2 = inputbuf + 1;
 
@@ -145,7 +148,13 @@ parse_input(void)
 #endif
 			printf("%s] (%s) ", dest, bsfirc->nick);
 			offset += strlen(dest) + strlen(bsfirc->nick) + 6;
+#ifdef NETSPEAK_CLEANER
+			cleanmsg = undo_netspeak(pptr+1);
+			wordwrap_print(cleanmsg, offset);
+			free(cleanmsg);
+#else
 			wordwrap_print(pptr+1, offset);
+#endif
 			log_event(EVENT_CHANMSG, bsfirc->nick, NULL, dest, pptr+1);
 		} else {
 #ifdef TIMESTAMPS
@@ -159,7 +168,13 @@ parse_input(void)
 		offset += strlen(dest) + 2;
 		printf("->%s", dest);
 		printf(": ");
+#ifdef NETSPEAK_CLEANER
+		cleanmsg = undo_netspeak(pptr+1);
+		wordwrap_print(cleanmsg, offset);
+		free(cleanmsg);
+#else
 		wordwrap_print(pptr + 1, offset);
+#endif
 		log_event(EVENT_PRIVMSG, dest, NULL, NULL, pptr+1);
 		}
 
