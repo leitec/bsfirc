@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_USERHOST, (void (*) (void *,...)) irc_whois_userhost);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_SERVER, (void (*) (void *,...)) irc_whois_server);
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_CHANNELS, (void (*) (void *,...)) irc_whois_channels);
+	irclib_register_callback(bsfirc->handle, IRCLIB_ERROR, (void (*) (void *,...)) error_callback);
 
 	open_log_dir();
 
@@ -120,3 +121,24 @@ int main(int argc, char **argv)
 		}
 	}
 }
+
+/* PROTO */
+void
+error_callback(void *handle, int code)
+{
+	eraseline();
+	printf("** ");
+	addts();
+	putchar(' ');
+
+	switch(code) {
+		case IRCLIB_ERROR_DISCONNECTED:
+			printf("Disconnected.\n");
+			break;
+		default:
+			printf("Unknown error type %d\n", code);
+	}
+
+	show_prompt();
+}
+

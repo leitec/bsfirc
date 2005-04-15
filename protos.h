@@ -1,3 +1,5 @@
+void error_callback (void *handle, int code);
+char           * undo_netspeak (char *orig);
 void get_input (void);
 void parse_input (void);
 void irc_topic (void *h, char *chan, char *topic);
