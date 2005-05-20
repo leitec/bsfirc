@@ -3,6 +3,7 @@
 extern char     inputbuf[513];
 extern struct BSFirc *bsfirc;
 extern struct Waiting *waiting;
+extern struct ChannelList *chanlist;
 
 /* PROTO */
 void
@@ -10,6 +11,9 @@ get_input(void)
 {
 	unsigned char   inchr;
 	struct Waiting *wtmp, *wtmp2;
+	struct ChannelList *tr;
+	struct UserList *utr;
+	int             match = 0;
 
 	inchr = getchar();
 
@@ -20,7 +24,7 @@ get_input(void)
 		memset(inputbuf, 0, sizeof(inputbuf));
 		bsfirc->istyping = 0;
 
-		for(wtmp = waiting; wtmp != NULL;) {
+		for (wtmp = waiting; wtmp != NULL;) {
 			wtmp2 = wtmp;
 			wtmp = wtmp->next;
 			free(wtmp2->nick);
@@ -28,7 +32,7 @@ get_input(void)
 		}
 
 		waiting = NULL;
-			
+
 		show_prompt();
 		break;
 	case 21:
@@ -80,6 +84,42 @@ get_input(void)
 				}
 			}
 			break;
+		} else if (inchr == '\t') {
+			switch (inputbuf[0]) {
+			case 'i':
+			case 'm':
+				if (strchr(inputbuf, ' ') != NULL)
+					break;
+
+				for (tr = chanlist; tr != NULL; tr = tr->next) {
+					if (strcasecmp(tr->chan, bsfirc->lastchan) == 0) {
+						for (utr = tr->users; utr != NULL; utr = utr->next) {
+							if (strncasecmp(utr->name, inputbuf + 1, strlen(inputbuf) - 1) == 0) {
+								match++;
+							}
+						}
+
+						if (match > 1 || match == 0)
+							break;
+						else {
+							for (utr = tr->users; utr != NULL; utr = utr->next) {
+								if (strncasecmp(utr->name, inputbuf + 1, strlen(inputbuf) - 1) == 0)
+									break;
+							}
+
+							eraseline();
+							memcpy(inputbuf + 1, utr->name, strlen(utr->name));
+
+							if (inputbuf[0] == 'm')
+								inputbuf[strlen(inputbuf)] = ' ';
+
+							show_prompt();
+
+						}
+						break;
+					}
+				}
+			}
 		}
 	default:
 		if (inchr < 32)
@@ -106,12 +146,12 @@ parse_input(void)
 		printf("\n");
 		exit(-1);
 	} else if (inputbuf[0] == 'i') {
-		irclib_whois(bsfirc->handle, inputbuf+1);
+		irclib_whois(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'm') {
 		char           *pptr, *pptr2, *dest;
 		int             offset;
 #ifdef NETSPEAK_CLEANER
-		char		*cleanmsg;
+		char           *cleanmsg;
 #endif
 
 		pptr2 = inputbuf + 1;
@@ -126,18 +166,18 @@ parse_input(void)
 		strncpy(dest, pptr2, pptr - pptr2);
 		irclib_privmsg(bsfirc->handle, dest, pptr + 1);
 
-		if(dest[0] == '#' || dest[0] == '&') {
-			if(bsfirc->lastchan != NULL)
+		if (dest[0] == '#' || dest[0] == '&') {
+			if (bsfirc->lastchan != NULL)
 				free(bsfirc->lastchan);
 			bsfirc->lastchan = strdup(dest);
 		} else {
-			if(bsfirc->lastmsg != NULL)
+			if (bsfirc->lastmsg != NULL)
 				free(bsfirc->lastmsg);
 			bsfirc->lastmsg = strdup(dest);
 		}
-		
+
 		eraseline();
-		if(dest[0] == '#' || dest[0] == '&') {
+		if (dest[0] == '#' || dest[0] == '&') {
 			putchar('[');
 #ifdef TIMESTAMPS_CHANMSG
 			addts_short();
@@ -149,33 +189,33 @@ parse_input(void)
 			printf("%s] (%s) ", dest, bsfirc->nick);
 			offset += strlen(dest) + strlen(bsfirc->nick) + 6;
 #ifdef NETSPEAK_CLEANER
-			cleanmsg = undo_netspeak(pptr+1);
+			cleanmsg = undo_netspeak(pptr + 1);
 			wordwrap_print(cleanmsg, offset);
 			free(cleanmsg);
 #else
-			wordwrap_print(pptr+1, offset);
+			wordwrap_print(pptr + 1, offset);
 #endif
-			log_event(EVENT_CHANMSG, bsfirc->nick, NULL, dest, pptr+1);
+			log_event(EVENT_CHANMSG, bsfirc->nick, NULL, dest, pptr + 1);
 		} else {
 #ifdef TIMESTAMPS
-		addts();
-		putchar(' ');
-		offset = 13;
+			addts();
+			putchar(' ');
+			offset = 13;
 #else
-		offset = 2;
+			offset = 2;
 #endif
 
-		offset += strlen(dest) + 2;
-		printf("->%s", dest);
-		printf(": ");
+			offset += strlen(dest) + 2;
+			printf("->%s", dest);
+			printf(": ");
 #ifdef NETSPEAK_CLEANER
-		cleanmsg = undo_netspeak(pptr+1);
-		wordwrap_print(cleanmsg, offset);
-		free(cleanmsg);
+			cleanmsg = undo_netspeak(pptr + 1);
+			wordwrap_print(cleanmsg, offset);
+			free(cleanmsg);
 #else
-		wordwrap_print(pptr + 1, offset);
+			wordwrap_print(pptr + 1, offset);
 #endif
-		log_event(EVENT_PRIVMSG, dest, NULL, NULL, pptr+1);
+			log_event(EVENT_PRIVMSG, dest, NULL, NULL, pptr + 1);
 		}
 
 		free(dest);
@@ -185,26 +225,26 @@ parse_input(void)
 	} else if (inputbuf[0] == 'p') {
 		irclib_part(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'w') {
-		if(inputbuf[1] == 0) {
-			if(bsfirc->lastchan != NULL) {
+		if (inputbuf[1] == 0) {
+			if (bsfirc->lastchan != NULL) {
 				printf("\n");
 				show_channel_users(bsfirc->lastchan);
 				return;
 			}
 		} else {
 			printf("\n");
-			show_channel_users(inputbuf+1);
+			show_channel_users(inputbuf + 1);
 			return;
 		}
-	} else if(inputbuf[0] == 'o') {
-		irclib_op(bsfirc->handle, bsfirc->lastchan, inputbuf+1);
-	} else if(inputbuf[0] == 'W') {
+	} else if (inputbuf[0] == 'o') {
+		irclib_op(bsfirc->handle, bsfirc->lastchan, inputbuf + 1);
+	} else if (inputbuf[0] == 'W') {
 		printf("\n** ");
 		addts();
 		printf(" %s", bsfirc->nick);
-		if(bsfirc->server != NULL)
+		if (bsfirc->server != NULL)
 			printf(" on %s", bsfirc->server);
-	} else if(inputbuf[0] == '?' || inputbuf[0] == 'h') {
+	} else if (inputbuf[0] == '?' || inputbuf[0] == 'h') {
 		printf("\n** bsfirc commands:\n");
 		printf("   j<chan>        : join <chan>\n");
 		printf("   p<chan>        : leave <chan>\n");
@@ -216,8 +256,8 @@ parse_input(void)
 		printf("   w              : show who is in the channel\n");
 		printf("   i<nick>        : whois <nick>\n");
 		printf("   W              : show your nickname and server\n");
+		printf("   o<nick>        : op <nick> on current channel\n");
 		printf("   q!             : quit");
 	}
-
 	printf("\n");
 }
