@@ -30,6 +30,9 @@ const struct WordTable table[] = {
 	{"r", "are"},
 	{"i", "I"},
 	{"i'm", "I'm"},
+	{"i've", "I've"},
+	{"ive", "I've"},
+	{"i'd", "I'd"},
 	{"ur", "you're"},	/* there's no way to remove the ambiguity;
 				 * pick one. */
 	{"ne1", "anyone"},
