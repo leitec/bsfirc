@@ -196,6 +196,8 @@ parse_input(void)
 			show_channel_users(inputbuf+1);
 			return;
 		}
+	} else if(inputbuf[0] == 'o') {
+		irclib_op(bsfirc->handle, bsfirc->lastchan, inputbuf+1);
 	} else if(inputbuf[0] == 'W') {
 		printf("\n** ");
 		addts();
