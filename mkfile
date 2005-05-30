@@ -13,6 +13,7 @@ OFILES= \
 	lists.$O\
 	log.$O\
 	output.$O\
+	p9win.$O\
 	screen.$O\
 	irclib/libirc.a$O\
 

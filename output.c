@@ -1,5 +1,9 @@
 #include "bsfirc.h"
 
+#ifdef PLAN9
+#include  <time.h>
+#endif
+
 extern int prompt_len;
 extern char inputbuf[513];
 extern struct Waiting *waiting;

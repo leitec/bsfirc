@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 	if(user == NULL)
 		user = strdup("bsfirc");
 
-	bsfirc->handle = irclib_create_handle();
+	bsfirc->handle = (void *)irclib_create_handle();
 	irclib_setnick(bsfirc->handle, ircnick);
 	irclib_setname(bsfirc->handle, ircname);
 	irclib_setusername(bsfirc->handle, user);

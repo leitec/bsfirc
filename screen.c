@@ -5,6 +5,7 @@
 
 #ifdef PLAN9
 #include <time.h>
+#include <fcntl.h>
 #endif
 
 #ifndef __MINGW32__
