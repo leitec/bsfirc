@@ -5,39 +5,39 @@
 
 #define chomp(x) { if(x[strlen(x)-2] == '\r') x[strlen(x)-2] = 0; else if(x[strlen(x)-1] == '\n') x[strlen(x)-1] = 0; }
 
-char inputbuf[513];
-int prompt_len;
-struct BSFirc *bsfirc;
+char            inputbuf[513];
+int             prompt_len;
+struct BSFirc  *bsfirc;
 struct ChannelList *chanlist = NULL;
 struct Waiting *waiting = NULL;
 
-int main(int argc, char **argv)
+int 
+main(int argc, char **argv)
 {
-	char *ircsrv, *ircnick, *ircname, *user;
-	fd_set readfs;
-	struct timeval tm;
+	char           *ircsrv, *ircnick, *ircname, *user;
+	fd_set          readfs;
+	struct timeval  tm;
 
 	ircsrv = getenv("IRCSERVER");
-	if(ircsrv == NULL) {
+	if (ircsrv == NULL) {
 		printf("** IRC server: ");
+		fflush(stdout);
 		fgets(inputbuf, sizeof(inputbuf), stdin);
 		chomp(inputbuf);
 		ircsrv = strdup(inputbuf);
 	}
-
 	ircnick = getenv("IRCNICK");
-	if(ircnick == NULL) {
+	if (ircnick == NULL) {
 		printf("** Nickname: ");
+		fflush(stdout);
 		fgets(inputbuf, sizeof(inputbuf), stdin);
 		chomp(inputbuf);
 		ircnick = strdup(inputbuf);
 	}
-
 	ircname = getenv("IRCNAME");
-	if(ircname == NULL) {
+	if (ircname == NULL) {
 		ircname = strdup("bsfirc user");
 	}
-
 	setup_tty();
 	get_screen_size();
 
@@ -64,10 +64,10 @@ int main(int argc, char **argv)
 
 	user = getenv("USER");
 
-	if(user == NULL)
+	if (user == NULL)
 		user = strdup("bsfirc");
 
-	bsfirc->handle = (void *)irclib_create_handle();
+	bsfirc->handle = (void *) irclib_create_handle();
 	irclib_setnick(bsfirc->handle, ircnick);
 	irclib_setname(bsfirc->handle, ircname);
 	irclib_setusername(bsfirc->handle, user);
@@ -99,24 +99,23 @@ int main(int argc, char **argv)
 	printf("** Server set to %s.\n", ircsrv);
 	irclib_connect(bsfirc->handle, ircsrv, 6667);
 
-	while(!irclib_connected(bsfirc->handle));
+	while (!irclib_connected(bsfirc->handle));
 	printf("** Connected.\n");
 
 	memset(inputbuf, 0, sizeof(inputbuf));
 	show_prompt();
 
-	while(1) {
+	while (1) {
 		tm.tv_sec = 2;
 		tm.tv_usec = 500000;
 
 		FD_ZERO(&readfs);
 		FD_SET(0, &readfs);
-		if(irclib_select(1, &readfs, NULL, NULL, &tm) != IRCLIB_RET_OK) {
-			if(errno == EINTR)
+		if (irclib_select(1, &readfs, NULL, NULL, &tm) != IRCLIB_RET_OK) {
+			if (errno == EINTR)
 				continue;
 		}
-
-		if(FD_ISSET(0, &readfs)) {
+		if (FD_ISSET(0, &readfs)) {
 			get_input();
 		}
 	}
@@ -131,14 +130,13 @@ error_callback(void *handle, int code)
 	addts();
 	putchar(' ');
 
-	switch(code) {
-		case IRCLIB_ERROR_DISCONNECTED:
-			printf("Disconnected.\n");
-			break;
-		default:
-			printf("Unknown error type %d\n", code);
+	switch (code) {
+	case IRCLIB_ERROR_DISCONNECTED:
+		printf("Disconnected.\n");
+		break;
+	default:
+		printf("Unknown error type %d\n", code);
 	}
 
 	show_prompt();
 }
-
