@@ -218,6 +218,8 @@ irc_notice(void *h, char *nick, char *host, char *msg)
 void
 irc_nickchange(void *h, char *old, char *new)
 {
+	change_user_nick(old, new);
+
 	printf("** ");
 	eraseline();
 
