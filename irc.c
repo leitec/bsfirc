@@ -216,6 +216,23 @@ irc_notice(void *h, char *nick, char *host, char *msg)
 
 /* PROTO */
 void
+irc_nickchange(void *h, char *old, char *new)
+{
+	printf("** ");
+	eraseline();
+
+#ifdef TIMESTAMPS
+	addts();
+	putchar(' ');
+#endif
+	
+	printf("%s is now known as %s.\n", old, new);
+
+	show_prompt();
+}
+
+/* PROTO */
+void
 irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 {
 	int             offset, found = 0;
