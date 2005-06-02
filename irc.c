@@ -137,8 +137,11 @@ irc_nickinuse(void *h, char *nick)
 
 	if(bsfirc->ready == 0) {
 		char *newnick = strdup(nick);
+		do {
 		notreallyrandomvalue = (size_t)time(NULL) % strlen(bsfirc->nick);
-		newnick[notreallyrandomvalue] = 'A'+notreallyrandomvalue;
+		} while(notreallyrandomvalue > 26);
+
+		newnick[notreallyrandomvalue] = 'a'+notreallyrandomvalue;
 		printf("** Trying \"%s\"\n", newnick);
 		irclib_setnick(h, newnick);
 		if(bsfirc->nick != NULL) 
