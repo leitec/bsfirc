@@ -71,7 +71,7 @@ open_log_dir(void)
 		}
 		return 0;
 	} else
-		free(tmp);
+		closedir(tmp);
 
 	return 0;
 }
