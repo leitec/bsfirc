@@ -65,6 +65,7 @@ irc_join(void *h, char *nick, char *host, char *channel)
 			free(bsfirc->lastchan);
 
 		bsfirc->lastchan = strdup(channel);
+		bsfirc->lastmsgtype = LAST_MESSAGE_CHANNEL;
 	}
 
 	show_prompt();
@@ -250,12 +251,15 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 		if (target[0] == '#' || target[0] == '&') {
 			if (bsfirc->lastchan != 0)
 				free(bsfirc->lastchan);
+
 			bsfirc->lastchan = strdup(target);
+			bsfirc->lastmsgtype = LAST_MESSAGE_CHANNEL;
 		} else {
 			if (bsfirc->lastmsg != 0)
 				free(bsfirc->lastmsg);
 
 			bsfirc->lastmsg = strdup(nick);
+			bsfirc->lastmsgtype = LAST_MESSAGE_PRIVATE;
 		}
 	}
 	eraseline();

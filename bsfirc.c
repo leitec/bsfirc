@@ -59,6 +59,7 @@ main(int argc, char **argv)
 	bsfirc->lastchan = 0;
 	bsfirc->ready = 0;
 	bsfirc->server = NULL;
+	bsfirc->lastmsgtype = LAST_MESSAGE_NONE;
 
 	user = getenv("USER");
 

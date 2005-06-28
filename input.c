@@ -68,7 +68,23 @@ get_input(void)
 	case 'c':
 	case '\t':
 		if (inputbuf[0] == 0) {
-			if (inchr == 'r' || inchr == '\t') {
+			if (inchr == 'r') {
+				if (bsfirc->lastmsgtype == LAST_MESSAGE_CHANNEL) {
+					if(bsfirc->lastchan) {
+						sprintf(inputbuf, "m%s ", bsfirc->lastchan);
+					}
+				} else if(bsfirc->lastmsgtype == LAST_MESSAGE_PRIVATE) {
+					if(bsfirc->lastmsg) {
+						sprintf(inputbuf, "m%s ", bsfirc->lastmsg);
+					}
+				}
+				
+				if(bsfirc->lastmsgtype != LAST_MESSAGE_NONE) {
+					printf("%s", inputbuf);
+					fflush(stdout);
+					bsfirc->istyping = 1;
+				}
+			} else if (inchr == '\t') {
 				if (bsfirc->lastmsg) {
 					printf("m%s ", bsfirc->lastmsg);
 					bsfirc->istyping = 1;
@@ -170,10 +186,12 @@ parse_input(void)
 			if (bsfirc->lastchan != NULL)
 				free(bsfirc->lastchan);
 			bsfirc->lastchan = strdup(dest);
+			bsfirc->lastmsgtype = LAST_MESSAGE_CHANNEL;
 		} else {
 			if (bsfirc->lastmsg != NULL)
 				free(bsfirc->lastmsg);
 			bsfirc->lastmsg = strdup(dest);
+			bsfirc->lastmsgtype = LAST_MESSAGE_PRIVATE;
 		}
 
 		eraseline();
@@ -222,6 +240,10 @@ parse_input(void)
 		return;
 	} else if (inputbuf[0] == 'j') {
 		irclib_join(bsfirc->handle, inputbuf + 1);
+	} else if (inputbuf[0] == 'n') {
+		free(bsfirc->nick);
+		bsfirc->nick = strdup(inputbuf+1);
+		irclib_setnick(bsfirc->handle, inputbuf+1);
 	} else if (inputbuf[0] == 'p') {
 		irclib_part(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'w') {
@@ -251,8 +273,8 @@ parse_input(void)
 		printf("   m<rec> <msg>   : send <msg> to <rec> (channel or user)\n");
 		printf("   c<msg>         : reply to last channel message\n");
 		printf("   '<msg>         : same as c\n");
-		printf("   r<msg>         : reply to last private message\n");
-		printf("   [TAB]<msg>     : same as r\n");
+		printf("   [TAB]<msg>     : reply to last private message\n");
+		printf("   r<msg>         : reply to last message\n");
 		printf("   w              : show who is in the channel\n");
 		printf("   i<nick>        : whois <nick>\n");
 		printf("   W              : show your nickname and server\n");
