@@ -15,7 +15,7 @@ get_input(void)
 	struct UserList *utr;
 	int             match = 0;
 
-	inchr = getchar();
+	read(0, &inchr, 1);
 
 	switch (inchr) {
 	case '\n':
