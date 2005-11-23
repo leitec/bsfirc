@@ -16,14 +16,14 @@
 #endif
 
 #ifndef __MINGW32__
-struct termios t_attr;
-struct termios saved_attr;
-int istat, attrs_saved;
+struct termios  t_attr;
+struct termios  saved_attr;
+int             istat, attrs_saved;
 #endif
 
-int screen_cols;
-int screen_lines;
-int prompt_len;
+int             screen_cols;
+int             screen_lines;
+int             prompt_len;
 
 /* PROTO */
 void
@@ -82,7 +82,7 @@ get_screen_size(void)
 	screen_cols = getwidth();
 	screen_lines = 25;
 #else
-	struct winsize scrsize;
+	struct winsize  scrsize;
 
 	ioctl(fileno(stdin), TIOCGWINSZ, &scrsize);
 
@@ -185,4 +185,3 @@ wordwrap_print_echostr(char *str, char *echostr)
 	printf("%s %s\n", echostr, curline);
 	free(linebuf);
 }
-

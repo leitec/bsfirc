@@ -9,7 +9,7 @@ struct BSFirc  *bsfirc;
 struct ChannelList *chanlist = NULL;
 struct Waiting *waiting = NULL;
 
-int 
+int
 main(int argc, char **argv)
 {
 	char           *ircsrv, *ircnick, *ircname, *user;

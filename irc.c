@@ -9,7 +9,7 @@ irc_topic(void *h, char *chan, char *topic)
 {
 	eraseline();
 	printf("** Topic for %s: ", chan);
-	wordwrap_print(topic, 15+strlen(chan));
+	wordwrap_print(topic, 15 + strlen(chan));
 	show_prompt();
 }
 
@@ -42,7 +42,7 @@ irc_ready(void *h)
 void
 irc_server_name(void *h, char *name)
 {
-	if(bsfirc->server != NULL)
+	if (bsfirc->server != NULL)
 		free(bsfirc->server);
 
 	bsfirc->server = strdup(name);
@@ -60,14 +60,13 @@ irc_join(void *h, char *nick, char *host, char *channel)
 	printf(" %s has joined %s.\n", nick, channel);
 	log_event(EVENT_CHANJOIN, nick, host, channel, NULL);
 
-	if(strcasecmp(bsfirc->nick, nick) == 0) {
-		if(bsfirc->lastchan != NULL)
+	if (strcasecmp(bsfirc->nick, nick) == 0) {
+		if (bsfirc->lastchan != NULL)
 			free(bsfirc->lastchan);
 
 		bsfirc->lastchan = strdup(channel);
 		bsfirc->lastmsgtype = LAST_MESSAGE_CHANNEL;
 	}
-
 	show_prompt();
 }
 
@@ -75,10 +74,10 @@ irc_join(void *h, char *nick, char *host, char *channel)
 void
 irc_addchanuser(void *h, char *chan, char *nick)
 {
-	if(nick[0] == '@') {
-		add_channel_user(nick+1, chan, MODE_OP);
-	} else if(nick[0] == '+') {
-		add_channel_user(nick+1, chan, MODE_VOICE);
+	if (nick[0] == '@') {
+		add_channel_user(nick + 1, chan, MODE_OP);
+	} else if (nick[0] == '+') {
+		add_channel_user(nick + 1, chan, MODE_VOICE);
 	} else {
 		add_channel_user(nick, chan, 0);
 	}
@@ -91,7 +90,7 @@ irc_namesdone(void *h, char *chan)
 	eraseline();
 
 	show_channel_users(chan);
-	
+
 	show_prompt();
 }
 
@@ -120,10 +119,10 @@ irc_quit(void *h, char *nick, char *msg)
 	printf(" %s has quit: %s\n", nick, msg);
 
 	/*
-	 * This also handles writing to the logs 
+	 * This also handles writing to the logs
 	 */
 	process_quit(nick, msg);
-	
+
 	show_prompt();
 }
 
@@ -131,38 +130,37 @@ irc_quit(void *h, char *nick, char *msg)
 void
 irc_nickinuse(void *h, char *nick)
 {
-	size_t notreallyrandomvalue;
+	size_t          notreallyrandomvalue;
 
 	eraseline();
 	printf("** %s: Nickname already in use.\n", nick);
 
-	if(bsfirc->ready == 0) {
-		char *newnick = strdup(nick);
+	if (bsfirc->ready == 0) {
+		char           *newnick = strdup(nick);
 		do {
-		notreallyrandomvalue = (size_t)time(NULL) % strlen(bsfirc->nick);
-		} while(notreallyrandomvalue > 26);
+			notreallyrandomvalue = (size_t) time(NULL) % strlen(bsfirc->nick);
+		} while (notreallyrandomvalue > 26);
 
-		newnick[notreallyrandomvalue] = 'a'+notreallyrandomvalue;
+		newnick[notreallyrandomvalue] = 'a' + notreallyrandomvalue;
 		printf("** Trying \"%s\"\n", newnick);
 		irclib_setnick(h, newnick);
-		if(bsfirc->nick != NULL) 
+		if (bsfirc->nick != NULL)
 			free(bsfirc->nick);
 
 		bsfirc->nick = newnick;
 	}
-
 	show_prompt();
 }
-		
+
 /* PROTO */
 void
 irc_ctcp(void *h, char *nick, char *host, char *target, char *msg)
 {
-	int offset;
+	int             offset;
 
 	eraseline();
 
-	if(strncmp(msg, "ACTION ", 7) == 0) {
+	if (strncmp(msg, "ACTION ", 7) == 0) {
 		putchar('[');
 #ifdef TIMESTAMPS
 		addts_short();
@@ -173,9 +171,8 @@ irc_ctcp(void *h, char *nick, char *host, char *target, char *msg)
 #endif
 		printf("%s] * %s ", target, nick);
 		offset += strlen(target) + strlen(nick) + 6;
-		wordwrap_print(msg+7, offset);
+		wordwrap_print(msg + 7, offset);
 	}
-
 	show_prompt();
 }
 
@@ -185,7 +182,7 @@ irc_mode(void *h, char *nick, char *host, char *target, int plus, int mode, char
 {
 	eraseline();
 
-	switch(mode) {
+	switch (mode) {
 	case C_MODE_OP:
 		change_user_mode(arg, target, plus, C_MODE_OP);
 		printf("** ");
@@ -201,7 +198,7 @@ irc_mode(void *h, char *nick, char *host, char *target, int plus, int mode, char
 void
 irc_notice(void *h, char *nick, char *host, char *msg)
 {
-	int offset;
+	int             offset;
 
 	eraseline();
 #ifdef TIMESTAMPS
@@ -231,7 +228,7 @@ irc_nickchange(void *h, char *old, char *new)
 	addts();
 	putchar(' ');
 #endif
-	
+
 	printf("%s is now known as %s.\n", old, new);
 
 	show_prompt();
@@ -244,7 +241,7 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 	int             offset, found = 0;
 	struct Waiting *wtr, *wtmp;
 #ifdef NETSPEAK_CLEANER
-	char *cleanmsg = undo_netspeak(msg);
+	char           *cleanmsg = undo_netspeak(msg);
 #endif
 
 	if (bsfirc->istyping == 0) {
@@ -283,25 +280,24 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
 #endif
 		log_event(EVENT_CHANMSG, nick, host, target, msg);
 	} else {
-		for(wtr = waiting; wtr != NULL; wtr = wtr->next) {
-			if(strcasecmp(wtr->nick, nick) == 0) {
+		for (wtr = waiting; wtr != NULL; wtr = wtr->next) {
+			if (strcasecmp(wtr->nick, nick) == 0) {
 				found = 1;
 				break;
 			}
 		}
 
-		if(!found) {
+		if (!found) {
 			wtmp = malloc(sizeof(struct Waiting));
 			wtmp->next = NULL;
 			wtmp->nick = strdup(nick);
-			if(waiting == NULL) {
+			if (waiting == NULL) {
 				waiting = wtmp;
 			} else {
-				for(wtr = waiting; wtr->next != NULL; wtr = wtr->next);
+				for (wtr = waiting; wtr->next != NULL; wtr = wtr->next);
 				wtr->next = wtmp;
 			}
 		}
-
 #ifdef TIMESTAMPS
 		addts();
 		putchar(' ');
@@ -340,7 +336,7 @@ irc_whois_channels(void *h, char *nick, char *channels)
 {
 	eraseline();
 	printf("** [%s] in: ", nick);
-	wordwrap_print(channels, 10+strlen(nick));
+	wordwrap_print(channels, 10 + strlen(nick));
 	show_prompt();
 }
 

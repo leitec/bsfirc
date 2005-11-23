@@ -11,24 +11,24 @@ enum {
 };
 
 struct BSFirc {
-	void *handle;
-	char *lastmsg;
-	int lastmsgtype;
-	char *lastchan;
-	char *nick;
-	char *server;
-	int istyping;
-	int ready;
+	void           *handle;
+	char           *lastmsg;
+	int             lastmsgtype;
+	char           *lastchan;
+	char           *nick;
+	char           *server;
+	int             istyping;
+	int             ready;
 };
 
 struct Waiting {
-	char *nick;
+	char           *nick;
 	struct Waiting *next;
 };
 
 struct UserList {
-	char *name;
-	uint8_t mode;
+	char           *name;
+	uint8_t         mode;
 	struct UserList *next;
 };
 
@@ -37,7 +37,7 @@ struct UserList {
 #define MODE_OP    0x02
 
 struct ChannelList {
-	char *chan;
+	char           *chan;
 	struct UserList *users;
 	struct ChannelList *next;
 };

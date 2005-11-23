@@ -48,7 +48,7 @@ open_log_dir(void)
 	sprintf(logpath, "%s/lib/bsfirc/log", homedir);
 #else
 	homedir = getenv("HOME");
-	
+
 	sprintf(logpath, "%s/.bsfirc", homedir);
 	umask(077);
 	mkdir(logpath, 0777);
@@ -89,12 +89,12 @@ log_event(int event_type, char *name, char *host, char *chan, char *msg)
 	if (!logging)
 		return;
 
-	if(event_type == EVENT_CHANMSG ||
-           event_type == EVENT_CHANJOIN ||
-	   event_type == EVENT_CHANPART ||
-	   event_type == EVENT_QUIT)
+	if (event_type == EVENT_CHANMSG ||
+	    event_type == EVENT_CHANJOIN ||
+	    event_type == EVENT_CHANPART ||
+	    event_type == EVENT_QUIT)
 		sprintf(user_log, "%s/%s.log", logpath, chan);
-	else	
+	else
 		sprintf(user_log, "%s/%s.log", logpath, name);
 
 	logfile = fopen(user_log, "a");

@@ -4,17 +4,17 @@
 #include  <time.h>
 #endif
 
-extern int prompt_len;
-extern char inputbuf[513];
+extern int      prompt_len;
+extern char     inputbuf[513];
 extern struct Waiting *waiting;
 
 /* PROTO */
 void
 addts(void)
 {
-	char ts[11];
-	struct tm *now;
-	time_t t;
+	char            ts[11];
+	struct tm      *now;
+	time_t          t;
 
 	t = time(0);
 	now = localtime(&t);
@@ -26,9 +26,9 @@ addts(void)
 void
 addts_short(void)
 {
-	char ts[6];
-	struct tm *now;
-	time_t t;
+	char            ts[6];
+	struct tm      *now;
+	time_t          t;
 
 	t = time(0);
 	now = localtime(&t);
@@ -40,9 +40,9 @@ addts_short(void)
 void
 eraseline(void)
 {
-	int x, l = strlen(inputbuf) + prompt_len;
+	int             x, l = strlen(inputbuf) + prompt_len;
 
-	for(x = 0; x < l; x++)
+	for (x = 0; x < l; x++)
 		printf("\b \b");
 }
 
@@ -54,13 +54,12 @@ show_prompt(void)
 
 	prompt_len = strlen(BSF_PROMPT) + 1;
 
-	if(waiting != NULL) {
-		for(wtr = waiting; wtr != NULL; wtr = wtr->next) {
+	if (waiting != NULL) {
+		for (wtr = waiting; wtr != NULL; wtr = wtr->next) {
 			prompt_len += strlen(wtr->nick) + 3;
 			printf("[%s] ", wtr->nick);
 		}
 	}
-
 	printf("%s", BSF_PROMPT);
 	printf(" %s", inputbuf);
 	fflush(stdout);

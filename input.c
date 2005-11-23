@@ -70,16 +70,15 @@ get_input(void)
 		if (inputbuf[0] == 0) {
 			if (inchr == 'r') {
 				if (bsfirc->lastmsgtype == LAST_MESSAGE_CHANNEL) {
-					if(bsfirc->lastchan) {
+					if (bsfirc->lastchan) {
 						sprintf(inputbuf, "m%s ", bsfirc->lastchan);
 					}
-				} else if(bsfirc->lastmsgtype == LAST_MESSAGE_PRIVATE) {
-					if(bsfirc->lastmsg) {
+				} else if (bsfirc->lastmsgtype == LAST_MESSAGE_PRIVATE) {
+					if (bsfirc->lastmsg) {
 						sprintf(inputbuf, "m%s ", bsfirc->lastmsg);
 					}
 				}
-				
-				if(bsfirc->lastmsgtype != LAST_MESSAGE_NONE) {
+				if (bsfirc->lastmsgtype != LAST_MESSAGE_NONE) {
 					printf("%s", inputbuf);
 					fflush(stdout);
 					bsfirc->istyping = 1;
@@ -242,8 +241,8 @@ parse_input(void)
 		irclib_join(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'n') {
 		free(bsfirc->nick);
-		bsfirc->nick = strdup(inputbuf+1);
-		irclib_setnick(bsfirc->handle, inputbuf+1);
+		bsfirc->nick = strdup(inputbuf + 1);
+		irclib_setnick(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'p') {
 		irclib_part(bsfirc->handle, inputbuf + 1);
 	} else if (inputbuf[0] == 'w') {
