@@ -61,7 +61,10 @@ main(int argc, char **argv)
 	bsfirc->server = NULL;
 	bsfirc->lastmsgtype = LAST_MESSAGE_NONE;
 
-	user = getenv("USER");
+	user = getenv("IRCUSER");
+
+	if(user == NULL) 
+		user = getenv("USER");
 
 	if (user == NULL)
 		user = strdup("bsfirc");
