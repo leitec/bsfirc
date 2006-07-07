@@ -7,6 +7,7 @@
 extern int      prompt_len;
 extern char     inputbuf[513];
 extern struct Waiting *waiting;
+char           *window_title = NULL;
 
 /* PROTO */
 void
@@ -62,5 +63,24 @@ show_prompt(void)
 	}
 	printf("%s", BSF_PROMPT);
 	printf(" %s", inputbuf);
+	fflush(stdout);
+}
+
+/* PROTO */
+void
+set_title(char *title)
+{
+	char           *termtype = getenv("TERM");
+
+	if (window_title != NULL)
+		free(window_title);
+
+	if (strncmp(termtype, "xterm", 5) == 0) {
+		printf("\033]0;%s\007", title);
+	} else if (strncmp(termtype, "screen", 6) == 0) {
+		printf("\033_%s\033\\", title);
+	}
+	window_title = strdup(title);
+
 	fflush(stdout);
 }

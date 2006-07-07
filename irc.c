@@ -52,6 +52,7 @@ irc_server_name(void *h, char *name)
 void
 irc_join(void *h, char *nick, char *host, char *channel)
 {
+	char buf[1024];
 	add_channel_user(nick, channel, 0);
 
 	eraseline();
@@ -66,7 +67,11 @@ irc_join(void *h, char *nick, char *host, char *channel)
 
 		bsfirc->lastchan = strdup(channel);
 		bsfirc->lastmsgtype = LAST_MESSAGE_CHANNEL;
+
+		snprintf(buf, sizeof(buf), "bsfirc: %s on %s/%s", bsfirc->nick, bsfirc->server, bsfirc->lastchan);
+		set_title(buf);
 	}
+
 	show_prompt();
 }
 
