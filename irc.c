@@ -226,8 +226,8 @@ irc_nickchange(void *h, char *old, char *new)
 {
 	change_user_nick(old, new);
 
-	printf("** ");
 	eraseline();
+	printf("** ");
 
 #ifdef TIMESTAMPS
 	addts();
@@ -235,6 +235,17 @@ irc_nickchange(void *h, char *old, char *new)
 #endif
 
 	printf("%s is now known as %s.\n", old, new);
+
+	show_prompt();
+}
+
+/* PROTO */
+void
+irc_unhandled(void *h, char *message)
+{
+	eraseline();
+
+	printf("%s\n", message);
 
 	show_prompt();
 }

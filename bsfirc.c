@@ -95,6 +95,7 @@ main(int argc, char **argv)
 	irclib_register_callback(bsfirc->handle, IRCLIB_WHOIS_CHANNELS, (void (*) (void *,...)) irc_whois_channels);
 	irclib_register_callback(bsfirc->handle, IRCLIB_ERROR, (void (*) (void *,...)) error_callback);
 	irclib_register_callback(bsfirc->handle, IRCLIB_NICKCHANGE, (void (*) (void *,...)) irc_nickchange);
+	irclib_register_callback(bsfirc->handle, IRCLIB_UNHANDLED, (void (*) (void *,...)) irc_unhandled);
 
 	open_log_dir();
 
