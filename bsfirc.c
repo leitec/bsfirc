@@ -63,7 +63,7 @@ main(int argc, char **argv)
 
 	user = getenv("IRCUSER");
 
-	if(user == NULL) 
+	if (user == NULL)
 		user = getenv("USER");
 
 	if (user == NULL)

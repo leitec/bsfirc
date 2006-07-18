@@ -52,7 +52,7 @@ irc_server_name(void *h, char *name)
 void
 irc_join(void *h, char *nick, char *host, char *channel)
 {
-	char buf[1024];
+	char            buf[1024];
 	add_channel_user(nick, channel, 0);
 
 	eraseline();
@@ -71,7 +71,6 @@ irc_join(void *h, char *nick, char *host, char *channel)
 		snprintf(buf, sizeof(buf), "bsfirc: %s on %s/%s", bsfirc->nick, bsfirc->server, bsfirc->lastchan);
 		set_title(buf);
 	}
-
 	show_prompt();
 }
 
@@ -165,7 +164,9 @@ irc_ctcp(void *h, char *nick, char *host, char *target, char *msg)
 
 	eraseline();
 
-	if (strncmp(msg, "ACTION ", 7) == 0) {
+	if (strncmp(msg, "VERSION", 7) == 0) {
+		irclib_notice(h, nick, "\001VERSION bsfirc 0.0\001");
+	} else if (strncmp(msg, "ACTION ", 7) == 0) {
 		putchar('[');
 #ifdef TIMESTAMPS
 		addts_short();
