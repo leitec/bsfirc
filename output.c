@@ -4,7 +4,7 @@
 #include  <time.h>
 #endif
 
-extern int      prompt_len;
+extern int      prompt_len, screen_cols, screen_lines;
 extern char     inputbuf[513];
 extern struct Waiting *waiting;
 char           *window_title = NULL;
@@ -37,14 +37,103 @@ addts_short(void)
 	printf("%s", ts);
 }
 
+#if !defined(PLAN9)
+#define TERMINAL_HIJINX
+#endif
+
+#ifdef TERMINAL_HIJINX
+
+#ifdef __MINGW32__
+#define TERMINAL_WINDOWS
+#else
+
+#ifdef __DJGPP__
+#define TERMINAL_CONIO
+#else
+#define TERMINAL_VT100
+#endif
+
+#endif
+
+#endif
+
 /* PROTO */
 void
 eraseline(void)
 {
-	int             x, l = strlen(inputbuf) + prompt_len;
+	int             linelen = strlen(inputbuf) + prompt_len;
+#ifdef TERMINAL_HIJINX
+	int             numcols, numrows, x;
+#ifdef TERMINAL_CONIO
+	int             desiredx, desiredy;
+#endif
 
-	for (x = 0; x < l; x++)
+#ifdef TERMINAL_WINDOWS
+	COORD           nPos;
+	CONSOLE_SCREEN_BUFFER_INFO wInfo;
+	get_screen_size();
+#endif
+
+	numrows = linelen / screen_cols;
+	numcols = linelen % screen_cols;
+
+#ifdef TERMINAL_VT100
+	if (numrows > 0)
+		printf("\033[%dA", numrows);
+
+	if (numcols > 0)
+		printf("\033[%dD", numcols);
+#endif
+#ifdef TERMINAL_WINDOWS
+	GetConsoleScreenBufferInfo(hOut, &wInfo);
+
+	nPos.X = wInfo.dwCursorPosition.X - numcols;
+	nPos.Y = wInfo.dwCursorPosition.Y - numrows;
+
+	SetConsoleCursorPosition(hOut, nPos);
+#endif
+
+#ifdef TERMINAL_CONIO
+	desiredx = wherex() - numcols;
+	desiredy = wherey() - numrows;
+
+	gotoxy(desiredx, desiredy);
+#endif
+
+	for (x = 0; x < linelen; x++)
+		putchar(' ');
+
+#ifdef TERMINAL_VT100
+	if (numrows > 0)
+		printf("\033[%dA", numrows);
+
+	if (numcols > 0)
+		printf("\033[%dD", numcols);
+#endif
+#ifdef TERMINAL_WINDOWS
+	GetConsoleScreenBufferInfo(hOut, &wInfo);
+
+	nPos.X = wInfo.dwCursorPosition.X - numcols;
+	nPos.Y = wInfo.dwCursorPosition.Y - numrows;
+
+	SetConsoleCursorPosition(hOut, nPos);
+#endif
+#ifdef TERMINAL_CONIO
+	fflush(stdout);
+
+	gotoxy(desiredx, desiredy);
+#endif
+
+#else
+	int             x;
+
+#ifdef PLAN9
+	get_screen_size();
+#endif
+
+	for (x = 0; x < linelen; x++)
 		printf("\b \b");
+#endif
 }
 
 /* PROTO */
