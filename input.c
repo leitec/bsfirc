@@ -195,7 +195,7 @@ parse_input(void)
 
 		eraseline();
 		if (dest[0] == '#' || dest[0] == '&') {
-			putchar('[');
+			putchar('(');
 #ifdef TIMESTAMPS_CHANMSG
 			addts_short();
 			putchar('/');
@@ -203,7 +203,7 @@ parse_input(void)
 #else
 			offset = 0;
 #endif
-			printf("%s] (%s) ", dest, bsfirc->nick);
+			printf("%s) <%s> ", dest, bsfirc->nick);
 			offset += strlen(dest) + strlen(bsfirc->nick) + 6;
 #ifdef NETSPEAK_CLEANER
 			cleanmsg = undo_netspeak(pptr + 1);
@@ -260,13 +260,13 @@ parse_input(void)
 	} else if (inputbuf[0] == 'o') {
 		irclib_op(bsfirc->handle, bsfirc->lastchan, inputbuf + 1);
 	} else if (inputbuf[0] == 'W') {
-		printf("\n** ");
+		printf("\n:: ");
 		addts();
 		printf(" %s", bsfirc->nick);
 		if (bsfirc->server != NULL)
 			printf(" on %s", bsfirc->server);
 	} else if (inputbuf[0] == '?' || inputbuf[0] == 'h') {
-		printf("\n** bsfirc commands:\n");
+		printf("\n:: bsfirc commands:\n");
 		printf("   j<chan>        : join <chan>\n");
 		printf("   p<chan>        : leave <chan>\n");
 		printf("   m<rec> <msg>   : send <msg> to <rec> (channel or user)\n");

@@ -18,7 +18,7 @@ main(int argc, char **argv)
 
 	ircsrv = getenv("IRCSERVER");
 	if (ircsrv == NULL) {
-		printf("** IRC server: ");
+		printf(":: IRC server: ");
 		fflush(stdout);
 		fgets(inputbuf, sizeof(inputbuf), stdin);
 		chomp(inputbuf);
@@ -26,7 +26,7 @@ main(int argc, char **argv)
 	}
 	ircnick = getenv("IRCNICK");
 	if (ircnick == NULL) {
-		printf("** Nickname: ");
+		printf(":: Nickname: ");
 		fflush(stdout);
 		fgets(inputbuf, sizeof(inputbuf), stdin);
 		chomp(inputbuf);
@@ -99,12 +99,12 @@ main(int argc, char **argv)
 
 	open_log_dir();
 
-	printf("** bsfirc started.\n");
-	printf("** Server set to %s.\n", ircsrv);
+	printf(":: bsfirc started.\n");
+	printf(":: Server set to %s.\n", ircsrv);
 	irclib_connect(bsfirc->handle, ircsrv, 6667);
 
 	while (!irclib_connected(bsfirc->handle));
-	printf("** Connected.\n");
+	printf(":: Connected.\n");
 
 	memset(inputbuf, 0, sizeof(inputbuf));
 	show_prompt();
@@ -130,7 +130,7 @@ void
 error_callback(void *handle, int code)
 {
 	eraseline();
-	printf("** ");
+	printf(":: ");
 	addts();
 	putchar(' ');
 

@@ -12,7 +12,7 @@ show_channel_users(char *chan)
 	int             col;
 	uint8_t         ch;
 
-	printf("** ");
+	printf(":: ");
 
 	for (tr = chanlist; tr != NULL; tr = tr->next) {
 		if (strcasecmp(tr->chan, chan) == 0) {
@@ -28,7 +28,7 @@ show_channel_users(char *chan)
 
 				printf("%s [%c]", USERLIST_ECHOSTR, ch);
 				if (col < 2) {
-					printf(" %-16s\t", utr->name);
+					printf(" %-13s", utr->name);
 					col++;
 				} else {
 					printf(" %s\n", utr->name);

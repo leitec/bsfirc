@@ -19,7 +19,7 @@ addts(void)
 
 	t = time(0);
 	now = localtime(&t);
-	strftime(ts, 11, "[%H:%M:%S]", now);
+	strftime(ts, 11, "(%H:%M:%S)", now);
 	printf("%s", ts);
 }
 

@@ -51,7 +51,7 @@ enum {
 	EVENT_SENDPRIVMSG
 };
 
-#define BSF_PROMPT "::"
+#define BSF_PROMPT ">>"
 #define USERLIST_ECHOSTR "  "
 
 #include "protos.h"
