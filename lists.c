@@ -17,7 +17,7 @@ show_channel_users(char *chan)
     for (tr = chanlist; tr != NULL; tr = tr->next) {
 	if (strcasecmp(tr->chan, chan) == 0) {
 	    addts();
-	    printf(" Users in %s:\n", tr->chan);
+	    printf(" Users in %s: (%d)\n", tr->chan, tr->num);
 	    for (utr = tr->users, col = 0; utr != NULL; utr = utr->next) {
 		if (utr->mode == MODE_OP)
 		    ch = '@';
