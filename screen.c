@@ -29,7 +29,7 @@ int             prompt_len;
 void
 sigwinch_handler(int a)
 {
-	get_screen_size();
+    get_screen_size();
 }
 
 /* PROTO */
@@ -37,27 +37,27 @@ void
 setup_tty(void)
 {
 #if !defined(__MINGW32__) && !defined(PLAN9)
-	istat = 0;
-	if (tcgetattr(fileno(stdin), &t_attr) != 0)
-		return;
-	if (!attrs_saved) {
-		saved_attr = t_attr;
-		attrs_saved = 1;
-	}
-	t_attr.c_lflag &= ~(ECHO | ICANON);
-	t_attr.c_cc[VMIN] = 1;
-	if (tcsetattr(fileno(stdin), TCSAFLUSH, &t_attr) != 0)
-		perror("can't change tty modes.");
+    istat = 0;
+    if (tcgetattr(fileno(stdin), &t_attr) != 0)
+	return;
+    if (!attrs_saved) {
+	saved_attr = t_attr;
+	attrs_saved = 1;
+    }
+    t_attr.c_lflag &= ~(ECHO | ICANON);
+    t_attr.c_cc[VMIN] = 1;
+    if (tcsetattr(fileno(stdin), TCSAFLUSH, &t_attr) != 0)
+	perror("can't change tty modes.");
 #else
 #ifdef PLAN9
-	int             consctl;
+    int             consctl;
 
-	consctl = open("/dev/consctl", O_WRONLY);
-	if (consctl < 0) {
-		perror("Can't open consctl");
-		exit(-1);
-	}
-	write(consctl, "rawon", 5);
+    consctl = open("/dev/consctl", O_WRONLY);
+    if (consctl < 0) {
+	perror("Can't open consctl");
+	exit(-1);
+    }
+    write(consctl, "rawon", 5);
 #endif
 #endif
 }
@@ -67,7 +67,7 @@ void
 restore_tty(void)
 {
 #ifndef __MINGW32__
-	tcsetattr(fileno(stdin), TCSAFLUSH, &saved_attr);
+    tcsetattr(fileno(stdin), TCSAFLUSH, &saved_attr);
 #endif
 }
 
@@ -76,18 +76,18 @@ void
 get_screen_size(void)
 {
 #if defined(__DJGPP__) || defined(__MINGW32__)
-	screen_cols = 80;
-	screen_lines = 25;
+    screen_cols = 80;
+    screen_lines = 25;
 #elif defined (PLAN9)
-	screen_cols = getwidth();
-	screen_lines = 25;
+    screen_cols = getwidth();
+    screen_lines = 25;
 #else
-	struct winsize  scrsize;
+    struct winsize  scrsize;
 
-	ioctl(fileno(stdin), TIOCGWINSZ, &scrsize);
+    ioctl(fileno(stdin), TIOCGWINSZ, &scrsize);
 
-	screen_cols = scrsize.ws_col;
-	screen_lines = scrsize.ws_row;
+    screen_cols = scrsize.ws_col;
+    screen_lines = scrsize.ws_row;
 #endif
 }
 
@@ -96,92 +96,92 @@ get_screen_size(void)
 void
 wordwrap_print(char *str, int offset)
 {
-	char           *linebuf;
-	char           *curline;
-	int             firstline = 1;
-	int             xx = 0, yy, jj;
+    char           *linebuf;
+    char           *curline;
+    int             firstline = 1;
+    int             xx = 0, yy, jj;
 
-	linebuf = malloc(screen_cols + 1);
-	curline = str;
+    linebuf = malloc(screen_cols + 1);
+    curline = str;
 
-	for (;;) {
-		if (curline[xx] == 0)
-			break;
-		if (curline[xx] != ' ') {
-			xx++;
-			continue;
-		}
-		yy = xx + 1;
-		while (curline[yy] != ' ')
-			if (curline[yy] == 0)
-				break;
-			else
-				yy++;
-
-		if (yy > (screen_cols - offset - 1)) {
-			memset(linebuf, 0, screen_cols + 1);
-			strncpy(linebuf, curline, xx);
-			if (!firstline) {
-				for (jj = 0; jj < offset; jj++)
-					putchar(' ');
-			} else {
-				firstline = 0;
-			}
-
-			printf("%s\n", linebuf);
-			curline += xx + 1;
-			xx = 0;
-			continue;
-		}
-		xx++;
+    for (;;) {
+	if (curline[xx] == 0)
+	    break;
+	if (curline[xx] != ' ') {
+	    xx++;
+	    continue;
 	}
+	yy = xx + 1;
+	while (curline[yy] != ' ')
+	    if (curline[yy] == 0)
+		break;
+	    else
+		yy++;
 
-	if (!firstline)
+	if (yy > (screen_cols - offset - 1)) {
+	    memset(linebuf, 0, screen_cols + 1);
+	    strncpy(linebuf, curline, xx);
+	    if (!firstline) {
 		for (jj = 0; jj < offset; jj++)
-			putchar(' ');
+		    putchar(' ');
+	    } else {
+		firstline = 0;
+	    }
 
-	printf("%s\n", curline);
-	free(linebuf);
+	    printf("%s\n", linebuf);
+	    curline += xx + 1;
+	    xx = 0;
+	    continue;
+	}
+	xx++;
+    }
+
+    if (!firstline)
+	for (jj = 0; jj < offset; jj++)
+	    putchar(' ');
+
+    printf("%s\n", curline);
+    free(linebuf);
 }
 
 /* PROTO */
 void
 wordwrap_print_echostr(char *str, char *echostr)
 {
-	char           *linebuf;
-	char           *curline;
-	int             offset;
-	int             xx = 0, yy;
+    char           *linebuf;
+    char           *curline;
+    int             offset;
+    int             xx = 0, yy;
 
-	offset = strlen(echostr) + 1;
-	linebuf = malloc(screen_cols + 1);
-	curline = str;
+    offset = strlen(echostr) + 1;
+    linebuf = malloc(screen_cols + 1);
+    curline = str;
 
-	for (;;) {
-		if (curline[xx] == 0)
-			break;
-		if (curline[xx] != ' ') {
-			xx++;
-			continue;
-		}
-		yy = xx + 1;
-		while (curline[yy] != ' ')
-			if (curline[yy] == 0)
-				break;
-			else
-				yy++;
-
-		if (yy > (screen_cols - offset - 1)) {
-			memset(linebuf, 0, screen_cols + 1);
-			strncpy(linebuf, curline, xx);
-			printf("%s %s\n", echostr, linebuf);
-			curline += xx + 1;
-			xx = 0;
-			continue;
-		}
-		xx++;
+    for (;;) {
+	if (curline[xx] == 0)
+	    break;
+	if (curline[xx] != ' ') {
+	    xx++;
+	    continue;
 	}
+	yy = xx + 1;
+	while (curline[yy] != ' ')
+	    if (curline[yy] == 0)
+		break;
+	    else
+		yy++;
 
-	printf("%s %s\n", echostr, curline);
-	free(linebuf);
+	if (yy > (screen_cols - offset - 1)) {
+	    memset(linebuf, 0, screen_cols + 1);
+	    strncpy(linebuf, curline, xx);
+	    printf("%s %s\n", echostr, linebuf);
+	    curline += xx + 1;
+	    xx = 0;
+	    continue;
+	}
+	xx++;
+    }
+
+    printf("%s %s\n", echostr, curline);
+    free(linebuf);
 }

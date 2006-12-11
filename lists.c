@@ -7,223 +7,223 @@ extern struct ChannelList *chanlist;
 void
 show_channel_users(char *chan)
 {
-	struct ChannelList *tr;
-	struct UserList *utr;
-	int             col;
-	uint8_t         ch;
+    struct ChannelList *tr;
+    struct UserList *utr;
+    int             col;
+    uint8_t         ch;
 
-	printf(":: ");
+    printf(":: ");
 
-	for (tr = chanlist; tr != NULL; tr = tr->next) {
-		if (strcasecmp(tr->chan, chan) == 0) {
-			addts();
-			printf(" Users in %s:\n", tr->chan);
-			for (utr = tr->users, col = 0; utr != NULL; utr = utr->next) {
-				if (utr->mode == MODE_OP)
-					ch = '@';
-				else if (utr->mode == MODE_VOICE)
-					ch = '+';
-				else
-					ch = '.';
+    for (tr = chanlist; tr != NULL; tr = tr->next) {
+	if (strcasecmp(tr->chan, chan) == 0) {
+	    addts();
+	    printf(" Users in %s:\n", tr->chan);
+	    for (utr = tr->users, col = 0; utr != NULL; utr = utr->next) {
+		if (utr->mode == MODE_OP)
+		    ch = '@';
+		else if (utr->mode == MODE_VOICE)
+		    ch = '+';
+		else
+		    ch = '.';
 
-				printf("%s [%c]", USERLIST_ECHOSTR, ch);
-				if (col < 2) {
-					printf(" %-13s", utr->name);
-					col++;
-				} else {
-					printf(" %s\n", utr->name);
-					col = 0;
-				}
-			}
-
-			if (col != 0)
-				printf("\n");
-
-			break;
+		printf("%s [%c]", USERLIST_ECHOSTR, ch);
+		if (col < 2) {
+		    printf(" %-13s", utr->name);
+		    col++;
+		} else {
+		    printf(" %s\n", utr->name);
+		    col = 0;
 		}
+	    }
+
+	    if (col != 0)
+		printf("\n");
+
+	    break;
 	}
+    }
 }
 
 /* PROTO */
 void
 delete_channel_user(char *name, char *chan)
 {
-	struct ChannelList *tr, *p = NULL;
-	struct UserList *utr, *tmp;
+    struct ChannelList *tr, *p = NULL;
+    struct UserList *utr, *tmp;
 
-	for (tr = chanlist; tr != NULL; tr = tr->next) {
-		if (strcasecmp(chan, tr->chan) == 0) {
-			p = tr;
-			break;
+    for (tr = chanlist; tr != NULL; tr = tr->next) {
+	if (strcasecmp(chan, tr->chan) == 0) {
+	    p = tr;
+	    break;
+	}
+    }
+
+    if (p != NULL) {
+	if (strcasecmp(p->users->name, name) == 0) {
+	    tmp = p->users;
+	    p->users = p->users->next;
+	    free(tmp->name);
+	    free(tmp);
+	} else {
+	    for (utr = p->users; utr->next != NULL; utr = utr->next) {
+		if (strcasecmp(utr->next->name, name) == 0) {
+		    tmp = utr->next;
+		    utr->next = utr->next->next;
+		    free(tmp->name);
+		    free(tmp);
+		    break;
 		}
+	    }
 	}
 
-	if (p != NULL) {
-		if (strcasecmp(p->users->name, name) == 0) {
-			tmp = p->users;
-			p->users = p->users->next;
-			free(tmp->name);
-			free(tmp);
-		} else {
-			for (utr = p->users; utr->next != NULL; utr = utr->next) {
-				if (strcasecmp(utr->next->name, name) == 0) {
-					tmp = utr->next;
-					utr->next = utr->next->next;
-					free(tmp->name);
-					free(tmp);
-					break;
-				}
-			}
-		}
-
-		p->num--;
-	}
+	p->num--;
+    }
 }
 
 /* PROTO */
 void
 process_quit(char *name, char *msg)
 {
-	struct ChannelList *tr;
-	struct UserList *utr, *tmp;
+    struct ChannelList *tr;
+    struct UserList *utr, *tmp;
 
-	for (tr = chanlist; tr != NULL; tr = tr->next) {
-		if (strcasecmp(tr->users->name, name) == 0) {
-			tmp = tr->users;
-			tr->users = tr->users->next;
-			free(tmp->name);
-			free(tmp);
-			log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
-			tr->num--;
-		} else {
-			for (utr = tr->users; utr->next != NULL; utr = utr->next) {
-				if (strcasecmp(utr->next->name, name) == 0) {
-					tmp = utr->next;
-					utr->next = utr->next->next;
-					free(tmp->name);
-					free(tmp);
-					log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
-					tr->num--;
-					break;
-				}
-			}
+    for (tr = chanlist; tr != NULL; tr = tr->next) {
+	if (strcasecmp(tr->users->name, name) == 0) {
+	    tmp = tr->users;
+	    tr->users = tr->users->next;
+	    free(tmp->name);
+	    free(tmp);
+	    log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+	    tr->num--;
+	} else {
+	    for (utr = tr->users; utr->next != NULL; utr = utr->next) {
+		if (strcasecmp(utr->next->name, name) == 0) {
+		    tmp = utr->next;
+		    utr->next = utr->next->next;
+		    free(tmp->name);
+		    free(tmp);
+		    log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+		    tr->num--;
+		    break;
 		}
+	    }
 	}
+    }
 }
 
 /* PROTO */
 void
 change_user_mode(char *name, char *chan, int plus, int mode)
 {
-	struct ChannelList *tr;
-	struct UserList *utr;
+    struct ChannelList *tr;
+    struct UserList *utr;
 
-	for (tr = chanlist; tr != NULL; tr = tr->next) {
-		if (strcasecmp(chan, tr->chan) == 0) {
-			for (utr = tr->users; utr != NULL; utr = utr->next) {
-				if (strcasecmp(name, utr->name) == 0) {
-					if (mode == C_MODE_OP) {
-						if (plus == 1)
-							utr->mode |= MODE_OP;
-						else
-							utr->mode ^= MODE_OP;
-					}
-					break;
-				}
-			}
+    for (tr = chanlist; tr != NULL; tr = tr->next) {
+	if (strcasecmp(chan, tr->chan) == 0) {
+	    for (utr = tr->users; utr != NULL; utr = utr->next) {
+		if (strcasecmp(name, utr->name) == 0) {
+		    if (mode == C_MODE_OP) {
+			if (plus == 1)
+			    utr->mode |= MODE_OP;
+			else
+			    utr->mode ^= MODE_OP;
+		    }
+		    break;
 		}
+	    }
 	}
+    }
 }
 
 /* PROTO */
 void
 change_user_nick(char *old, char *new)
 {
-	struct ChannelList *tr;
-	struct UserList *utr;
+    struct ChannelList *tr;
+    struct UserList *utr;
 
-	for (tr = chanlist; tr != NULL; tr = tr->next) {
-		for (utr = tr->users; utr != NULL; utr = utr->next) {
-			if (strcasecmp(old, utr->name) == 0) {
-				free(utr->name);
-				utr->name = strdup(new);
-				break;
-			}
-		}
+    for (tr = chanlist; tr != NULL; tr = tr->next) {
+	for (utr = tr->users; utr != NULL; utr = utr->next) {
+	    if (strcasecmp(old, utr->name) == 0) {
+		free(utr->name);
+		utr->name = strdup(new);
+		break;
+	    }
 	}
+    }
 }
 
 /* PROTO */
 void
 add_channel_user(char *name, char *chan, uint8_t mode)
 {
-	struct ChannelList *tr, *p;
-	struct UserList *up, *utr, *utprev;
-	int             comp;
+    struct ChannelList *tr, *p;
+    struct UserList *up, *utr, *utprev;
+    int             comp;
 
-	if (chanlist == NULL) {
-		chanlist = malloc(sizeof(struct ChannelList));
-		chanlist->chan = strdup(chan);
-		chanlist->next = NULL;
-		chanlist->users = NULL;
-		p = chanlist;
-	} else {
-		p = NULL;
+    if (chanlist == NULL) {
+	chanlist = malloc(sizeof(struct ChannelList));
+	chanlist->chan = strdup(chan);
+	chanlist->next = NULL;
+	chanlist->users = NULL;
+	p = chanlist;
+    } else {
+	p = NULL;
 
-		for (tr = chanlist; tr != NULL; tr = tr->next) {
-			if (strcasecmp(chan, tr->chan) == 0) {
-				p = tr;
-				break;
-			}
-		}
-
-		if (p == NULL) {
-			for (tr = chanlist; tr->next != NULL; tr = tr->next);
-			tr->next = malloc(sizeof(struct ChannelList));
-			tr->next->chan = strdup(chan);
-			tr->next->next = NULL;
-			tr->next->users = NULL;
-			p = tr->next;
-		}
+	for (tr = chanlist; tr != NULL; tr = tr->next) {
+	    if (strcasecmp(chan, tr->chan) == 0) {
+		p = tr;
+		break;
+	    }
 	}
 
-	if (p->users == NULL) {
-		p->num = 0;
-		p->users = malloc(sizeof(struct UserList));
-		up = p->users;
-		up->next = NULL;
-	} else {
-		utprev = NULL;
+	if (p == NULL) {
+	    for (tr = chanlist; tr->next != NULL; tr = tr->next);
+	    tr->next = malloc(sizeof(struct ChannelList));
+	    tr->next->chan = strdup(chan);
+	    tr->next->next = NULL;
+	    tr->next->users = NULL;
+	    p = tr->next;
+	}
+    }
 
-		for (utr = p->users; utr != NULL; utr = utr->next) {
-			if ((comp = strcasecmp(name, utr->name)) <= 0) {
-				if (comp == 0)
-					return;
-				else
-					break;
-			}
-			utprev = utr;
-		}
+    if (p->users == NULL) {
+	p->num = 0;
+	p->users = malloc(sizeof(struct UserList));
+	up = p->users;
+	up->next = NULL;
+    } else {
+	utprev = NULL;
 
-		up = malloc(sizeof(struct UserList));
-
-		if (utr == NULL) {
-			for (utr = p->users; utr->next != NULL;
-			     utr = utr->next);
-			up->next = NULL;
-			utr->next = up;
-		} else {
-			if (utr == p->users) {
-				up->next = p->users;
-				p->users = up;
-			} else {
-				up->next = utr;
-				utprev->next = up;
-			}
-		}
+	for (utr = p->users; utr != NULL; utr = utr->next) {
+	    if ((comp = strcasecmp(name, utr->name)) <= 0) {
+		if (comp == 0)
+		    return;
+		else
+		    break;
+	    }
+	    utprev = utr;
 	}
 
-	up->name = strdup(name);
-	up->mode = mode;
-	p->num++;
+	up = malloc(sizeof(struct UserList));
+
+	if (utr == NULL) {
+	    for (utr = p->users; utr->next != NULL;
+		 utr = utr->next);
+	    up->next = NULL;
+	    utr->next = up;
+	} else {
+	    if (utr == p->users) {
+		up->next = p->users;
+		p->users = up;
+	    } else {
+		up->next = utr;
+		utprev->next = up;
+	    }
+	}
+    }
+
+    up->name = strdup(name);
+    up->mode = mode;
+    p->num++;
 }

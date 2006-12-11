@@ -13,28 +13,28 @@ char           *window_title = NULL;
 void
 addts(void)
 {
-	char            ts[11];
-	struct tm      *now;
-	time_t          t;
+    char            ts[11];
+    struct tm      *now;
+    time_t          t;
 
-	t = time(0);
-	now = localtime(&t);
-	strftime(ts, 11, "(%H:%M:%S)", now);
-	printf("%s", ts);
+    t = time(0);
+    now = localtime(&t);
+    strftime(ts, 11, "(%H:%M:%S)", now);
+    printf("%s", ts);
 }
 
 /* PROTO */
 void
 addts_short(void)
 {
-	char            ts[6];
-	struct tm      *now;
-	time_t          t;
+    char            ts[6];
+    struct tm      *now;
+    time_t          t;
 
-	t = time(0);
-	now = localtime(&t);
-	strftime(ts, 6, "%H:%M", now);
-	printf("%s", ts);
+    t = time(0);
+    now = localtime(&t);
+    strftime(ts, 6, "%H:%M", now);
+    printf("%s", ts);
 }
 
 #if !defined(PLAN9)
@@ -61,78 +61,78 @@ addts_short(void)
 void
 eraseline(void)
 {
-	int             linelen = strlen(inputbuf) + prompt_len;
+    int             linelen = strlen(inputbuf) + prompt_len;
 #ifdef TERMINAL_HIJINX
-	int             numcols, numrows, x;
+    int             numcols, numrows, x;
 #ifdef TERMINAL_CONIO
-	int             desiredx, desiredy;
+    int             desiredx, desiredy;
 #endif
 
 #ifdef TERMINAL_WINDOWS
-	COORD           nPos;
-	CONSOLE_SCREEN_BUFFER_INFO wInfo;
-	get_screen_size();
+    COORD           nPos;
+    CONSOLE_SCREEN_BUFFER_INFO wInfo;
+    get_screen_size();
 #endif
 
-	numrows = linelen / screen_cols;
-	numcols = linelen % screen_cols;
+    numrows = linelen / screen_cols;
+    numcols = linelen % screen_cols;
 
 #ifdef TERMINAL_VT100
-	if (numrows > 0)
-		printf("\033[%dA", numrows);
+    if (numrows > 0)
+	printf("\033[%dA", numrows);
 
-	if (numcols > 0)
-		printf("\033[%dD", numcols);
+    if (numcols > 0)
+	printf("\033[%dD", numcols);
 #endif
 #ifdef TERMINAL_WINDOWS
-	GetConsoleScreenBufferInfo(hOut, &wInfo);
+    GetConsoleScreenBufferInfo(hOut, &wInfo);
 
-	nPos.X = wInfo.dwCursorPosition.X - numcols;
-	nPos.Y = wInfo.dwCursorPosition.Y - numrows;
+    nPos.X = wInfo.dwCursorPosition.X - numcols;
+    nPos.Y = wInfo.dwCursorPosition.Y - numrows;
 
-	SetConsoleCursorPosition(hOut, nPos);
+    SetConsoleCursorPosition(hOut, nPos);
 #endif
 
 #ifdef TERMINAL_CONIO
-	desiredx = wherex() - numcols;
-	desiredy = wherey() - numrows;
+    desiredx = wherex() - numcols;
+    desiredy = wherey() - numrows;
 
-	gotoxy(desiredx, desiredy);
+    gotoxy(desiredx, desiredy);
 #endif
 
-	for (x = 0; x < linelen; x++)
-		putchar(' ');
+    for (x = 0; x < linelen; x++)
+	putchar(' ');
 
 #ifdef TERMINAL_VT100
-	if (numrows > 0)
-		printf("\033[%dA", numrows);
+    if (numrows > 0)
+	printf("\033[%dA", numrows);
 
-	if (numcols > 0)
-		printf("\033[%dD", numcols);
+    if (numcols > 0)
+	printf("\033[%dD", numcols);
 #endif
 #ifdef TERMINAL_WINDOWS
-	GetConsoleScreenBufferInfo(hOut, &wInfo);
+    GetConsoleScreenBufferInfo(hOut, &wInfo);
 
-	nPos.X = wInfo.dwCursorPosition.X - numcols;
-	nPos.Y = wInfo.dwCursorPosition.Y - numrows;
+    nPos.X = wInfo.dwCursorPosition.X - numcols;
+    nPos.Y = wInfo.dwCursorPosition.Y - numrows;
 
-	SetConsoleCursorPosition(hOut, nPos);
+    SetConsoleCursorPosition(hOut, nPos);
 #endif
 #ifdef TERMINAL_CONIO
-	fflush(stdout);
+    fflush(stdout);
 
-	gotoxy(desiredx, desiredy);
+    gotoxy(desiredx, desiredy);
 #endif
 
 #else
-	int             x;
+    int             x;
 
 #ifdef PLAN9
-	get_screen_size();
+    get_screen_size();
 #endif
 
-	for (x = 0; x < linelen; x++)
-		printf("\b \b");
+    for (x = 0; x < linelen; x++)
+	printf("\b \b");
 #endif
 }
 
@@ -140,36 +140,36 @@ eraseline(void)
 void
 show_prompt(void)
 {
-	struct Waiting *wtr;
+    struct Waiting *wtr;
 
-	prompt_len = strlen(BSF_PROMPT) + 1;
+    prompt_len = strlen(BSF_PROMPT) + 1;
 
-	if (waiting != NULL) {
-		for (wtr = waiting; wtr != NULL; wtr = wtr->next) {
-			prompt_len += strlen(wtr->nick) + 3;
-			printf("[%s] ", wtr->nick);
-		}
+    if (waiting != NULL) {
+	for (wtr = waiting; wtr != NULL; wtr = wtr->next) {
+	    prompt_len += strlen(wtr->nick) + 3;
+	    printf("[%s] ", wtr->nick);
 	}
-	printf("%s", BSF_PROMPT);
-	printf(" %s", inputbuf);
-	fflush(stdout);
+    }
+    printf("%s", BSF_PROMPT);
+    printf(" %s", inputbuf);
+    fflush(stdout);
 }
 
 /* PROTO */
 void
 set_title(char *title)
 {
-	char           *termtype = getenv("TERM");
+    char           *termtype = getenv("TERM");
 
-	if (window_title != NULL)
-		free(window_title);
+    if (window_title != NULL)
+	free(window_title);
 
-	if (strncmp(termtype, "xterm", 5) == 0) {
-		printf("\033]0;%s\007", title);
-	} else if (strncmp(termtype, "screen", 6) == 0) {
-		printf("\033_%s\033\\", title);
-	}
-	window_title = strdup(title);
+    if (strncmp(termtype, "xterm", 5) == 0) {
+	printf("\033]0;%s\007", title);
+    } else if (strncmp(termtype, "screen", 6) == 0) {
+	printf("\033_%s\033\\", title);
+    }
+    window_title = strdup(title);
 
-	fflush(stdout);
+    fflush(stdout);
 }
