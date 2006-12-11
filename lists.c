@@ -75,6 +75,8 @@ delete_channel_user(char *name, char *chan)
 				}
 			}
 		}
+
+		p->num--;
 	}
 }
 
@@ -92,6 +94,7 @@ process_quit(char *name, char *msg)
 			free(tmp->name);
 			free(tmp);
 			log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+			tr->num--;
 		} else {
 			for (utr = tr->users; utr->next != NULL; utr = utr->next) {
 				if (strcasecmp(utr->next->name, name) == 0) {
@@ -100,6 +103,7 @@ process_quit(char *name, char *msg)
 					free(tmp->name);
 					free(tmp);
 					log_event(EVENT_QUIT, name, NULL, tr->chan, msg);
+					tr->num--;
 					break;
 				}
 			}
@@ -154,7 +158,8 @@ void
 add_channel_user(char *name, char *chan, uint8_t mode)
 {
 	struct ChannelList *tr, *p;
-	struct UserList *up, *utr;
+	struct UserList *up, *utr, *utprev;
+	int             comp;
 
 	if (chanlist == NULL) {
 		chanlist = malloc(sizeof(struct ChannelList));
@@ -183,18 +188,22 @@ add_channel_user(char *name, char *chan, uint8_t mode)
 	}
 
 	if (p->users == NULL) {
+		p->num = 0;
 		p->users = malloc(sizeof(struct UserList));
 		up = p->users;
 		up->next = NULL;
 	} else {
-		for (utr = p->users; utr != NULL; utr = utr->next) {
-			if (strcasecmp(utr->name, name) == 0)
-				return;
-		}
+		utprev = NULL;
 
-		for (utr = p->users; utr != NULL; utr = utr->next)
-			if (strcasecmp(name, utr->name) < 0)
-				break;
+		for (utr = p->users; utr != NULL; utr = utr->next) {
+			if ((comp = strcasecmp(name, utr->name)) <= 0) {
+				if (comp == 0)
+					return;
+				else
+					break;
+			}
+			utprev = utr;
+		}
 
 		up = malloc(sizeof(struct UserList));
 
@@ -208,15 +217,13 @@ add_channel_user(char *name, char *chan, uint8_t mode)
 				up->next = p->users;
 				p->users = up;
 			} else {
-				struct UserList *utr2;
 				up->next = utr;
-				for (utr2 = p->users; utr2->next != utr;
-				     utr2 = utr2->next);
-				utr2->next = up;
+				utprev->next = up;
 			}
 		}
 	}
 
 	up->name = strdup(name);
 	up->mode = mode;
+	p->num++;
 }

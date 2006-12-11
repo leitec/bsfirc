@@ -38,6 +38,8 @@ struct UserList {
 
 struct ChannelList {
 	char           *chan;
+	int             num;
+
 	struct UserList *users;
 	struct ChannelList *next;
 };
