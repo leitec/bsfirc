@@ -9,7 +9,7 @@ CC=gcc
 # Add -DBELL_ON_INCOMING to sound an alert when a message
 # 	comes in.
 #
-CFLAGS=-g3 -pipe -DTIMESTAMPS -DNETSPEAK_CLEANER
+CFLAGS=-Os -pipe -DTIMESTAMPS -DNETSPEAK_CLEANER
 #CFLAGS+=-I/usr/local/djgpp/watt/inc
 #
 # Add -lsocket -lnsl for Solaris

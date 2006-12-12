@@ -17,7 +17,7 @@ show_channel_users(char *chan)
     printf(":: ");
 
     /*
-     *I'm writing this while tired and somewhat in a daze.
+     * I'm writing this while tired and somewhat in a daze.
      * It may be completely hideous.
      */
 
@@ -71,9 +71,9 @@ show_channel_users(char *chan)
 			else
 			    ch = ' ';
 
-			printf("[%c%s", ch, utr->name);
+			printf("(%c%s", ch, utr->name);
 			spaces(longest_column[col] - utr->namelen);
-			printf("] ");
+			printf(") ");
 			col++;
 
 			if (col > numcols) {
