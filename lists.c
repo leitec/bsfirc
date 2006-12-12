@@ -10,16 +10,21 @@ show_channel_users(char *chan)
 {
     struct ChannelList *tr;
     struct UserList *utr;
-    int             col, row, count, total_count;
+    int             col, row, count;
     uint8_t         ch;
     int             longest, numcols, percol, longest_column[5] = {0, 0, 0, 0, 0};
 
     printf(":: ");
 
+    /*
+     *I'm writing this while tired and somewhat in a daze.
+     * It may be completely hideous.
+     */
+
     for (tr = chanlist; tr != NULL; tr = tr->next) {
 	if (strcasecmp(tr->chan, chan) == 0) {
 	    /*
-	     * find longest nick inefficient, I know.
+	     * find longest nick. inefficient, I know.
 	     */
 
 	    /*
