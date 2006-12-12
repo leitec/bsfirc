@@ -37,6 +37,17 @@ addts_short(void)
     printf("%s", ts);
 }
 
+/* PROTO */
+void
+spaces(int num)
+{
+    int             i;
+
+    for (i = 0; i < num; i++)
+	putchar(' ');
+
+}
+
 #if !defined(PLAN9)
 #define TERMINAL_HIJINX
 #endif

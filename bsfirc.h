@@ -28,6 +28,7 @@ struct Waiting {
 
 struct UserList {
     char           *name;
+    int             namelen;
     uint8_t         mode;
     struct UserList *next;
 };

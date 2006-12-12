@@ -2,6 +2,7 @@
 
 extern struct BSFirc *bsfirc;
 extern struct ChannelList *chanlist;
+extern int      screen_cols;
 
 /* PROTO */
 void
@@ -9,36 +10,74 @@ show_channel_users(char *chan)
 {
     struct ChannelList *tr;
     struct UserList *utr;
-    int             col;
+    int             col, row, count, total_count;
     uint8_t         ch;
+    int             longest, numcols, percol, longest_column[5] = {0, 0, 0, 0, 0};
 
     printf(":: ");
 
     for (tr = chanlist; tr != NULL; tr = tr->next) {
 	if (strcasecmp(tr->chan, chan) == 0) {
-	    addts();
-	    printf(" Users in %s: (%d)\n", tr->chan, tr->num);
-	    for (utr = tr->users, col = 0; utr != NULL; utr = utr->next) {
-		if (utr->mode == MODE_OP)
-		    ch = '@';
-		else if (utr->mode == MODE_VOICE)
-		    ch = '+';
-		else
-		    ch = '.';
+	    /*
+	     * find longest nick inefficient, I know.
+	     */
 
-		printf("%s [%c]", USERLIST_ECHOSTR, ch);
-		if (col < 2) {
-		    printf(" %-13s", utr->name);
+	    /*
+	     * we could calculate some of this stuff when users join/leave,
+	     * but I think that happens more frequently than users displaying
+	     * the list of names in the channel. So, let's do it here.
+	     */
+
+	    for (longest = 0, utr = tr->users; utr != NULL; utr = utr->next)
+		if (utr->namelen > longest)
+		    longest = utr->namelen;
+
+	    numcols = (screen_cols - 3) / (longest + 4);
+	    if (numcols > 5)
+		numcols = 5;
+
+	    percol = tr->num / numcols;
+	    if (tr->num % numcols != 0)
+		percol++;
+
+	    for (col = -1, count = 0, utr = tr->users; col < numcols && count < tr->num; count++, utr = utr->next) {
+		if (count % percol == 0)
 		    col++;
-		} else {
-		    printf(" %s\n", utr->name);
-		    col = 0;
-		}
+
+		if (utr->namelen > longest_column[col])
+		    longest_column[col] = utr->namelen;
 	    }
 
-	    if (col != 0)
-		printf("\n");
+	    addts();
+	    printf(" Users in %s: (%d)\n", tr->chan, tr->num);
 
+	    for (row = 0; row < percol; row++) {
+		/* print every [percol+row] user */
+		printf("   ");
+		col = 0;
+
+		for (count = 0, utr = tr->users, col = 0; utr != NULL; utr = utr->next, count++) {
+		    if (count % percol == row) {
+
+			if (utr->mode == MODE_OP)
+			    ch = '@';
+			else if (utr->mode == MODE_VOICE)
+			    ch = '+';
+			else
+			    ch = ' ';
+
+			printf("[%c%s", ch, utr->name);
+			spaces(longest_column[col] - utr->namelen);
+			printf("] ");
+			col++;
+
+			if (col > numcols) {
+			    break;
+			}
+		    }
+		}
+		printf("\n");
+	    }
 	    break;
 	}
     }
@@ -147,6 +186,7 @@ change_user_nick(char *old, char *new)
 	    if (strcasecmp(old, utr->name) == 0) {
 		free(utr->name);
 		utr->name = strdup(new);
+		utr->namelen = strlen(new);;
 		break;
 	    }
 	}
@@ -224,6 +264,7 @@ add_channel_user(char *name, char *chan, uint8_t mode)
     }
 
     up->name = strdup(name);
+    up->namelen = strlen(name);
     up->mode = mode;
     p->num++;
 }
