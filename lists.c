@@ -242,8 +242,10 @@ add_channel_user(char *name, char *chan, uint8_t mode)
 
 	for (utr = p->users; utr != NULL; utr = utr->next) {
 	    if ((comp = strcasecmp(name, utr->name)) <= 0) {
-		if (comp == 0)
+		if (comp == 0) {
+		    utr->mode = mode;
 		    return;
+		}
 		else
 		    break;
 	    }
@@ -253,10 +255,8 @@ add_channel_user(char *name, char *chan, uint8_t mode)
 	up = malloc(sizeof(struct UserList));
 
 	if (utr == NULL) {
-	    for (utr = p->users; utr->next != NULL;
-		 utr = utr->next);
 	    up->next = NULL;
-	    utr->next = up;
+	    utprev->next = up;
 	} else {
 	    if (utr == p->users) {
 		up->next = p->users;

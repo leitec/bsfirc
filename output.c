@@ -170,6 +170,9 @@ show_prompt(void)
 void
 set_title(char *title)
 {
+#ifdef PLAN9
+	;
+#else
     char           *termtype = getenv("TERM");
 
     if (window_title != NULL)
@@ -183,4 +186,5 @@ set_title(char *title)
     window_title = strdup(title);
 
     fflush(stdout);
+#endif
 }

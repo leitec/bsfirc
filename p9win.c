@@ -3,6 +3,7 @@
 #define _QLOCK_EXTENSION
 #define _BSD_EXTENSION
 #define _POSIX_EXTENSION
+#define _PLAN9_SOURCE
 #define _POSIX_SOURCE
 #include <stdio.h>
 #include <unistd.h>

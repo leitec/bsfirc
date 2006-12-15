@@ -53,6 +53,7 @@ void
 irc_join(void *h, char *nick, char *host, char *channel)
 {
     char            buf[1024];
+
     add_channel_user(nick, channel, 0);
 
     eraseline();

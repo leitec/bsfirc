@@ -28,7 +28,7 @@ struct Waiting {
 
 struct UserList {
     char           *name;
-    int             namelen;
+    size_t          namelen;
     uint8_t         mode;
     struct UserList *next;
 };
@@ -39,7 +39,7 @@ struct UserList {
 
 struct ChannelList {
     char           *chan;
-    int             num;
+    size_t          num;
 
     struct UserList *users;
     struct ChannelList *next;
