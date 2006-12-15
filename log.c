@@ -93,7 +93,7 @@ log_event(int event_type, char *name, char *host, char *chan, char *msg)
 	event_type == EVENT_CHANJOIN ||
 	event_type == EVENT_CHANPART ||
 	event_type == EVENT_QUIT)
-	sprintf(user_log, "%s/%s.log", logpath, chan);
+	sprintf(user_log, "%s/chan-%s.log", logpath, chan+1);
     else
 	sprintf(user_log, "%s/%s.log", logpath, name);
 
