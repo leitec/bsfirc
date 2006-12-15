@@ -17,9 +17,11 @@ irc_topic(void *h, char *chan, char *topic)
 void
 irc_motd(void *h, char *motd)
 {
+#ifndef SQUELCH_MOTD
     eraseline();
     printf(":: %s\n", motd);
     show_prompt();
+#endif
 }
 
 /* PROTO */

@@ -3,7 +3,7 @@ BIN=/$objtype/bin
 
 TARG=bsflite
 CC=pcc
-CFLAGS=-I. -B -c -DPLAN9 -DTIMESTAMPS
+CFLAGS=-I. -B -c -DPLAN9 -DTIMESTAMPS -DSQUELCH_MOTD
 
 OFILES= \
 	bsfirc.$O\
