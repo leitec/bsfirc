@@ -1,7 +1,7 @@
 </$objtype/mkfile
 BIN=/$objtype/bin
 
-TARG=bsflite
+TARG=bsfirc
 CC=pcc
 CFLAGS=-I. -B -c -DPLAN9 -DTIMESTAMPS -DSQUELCH_MOTD
 
