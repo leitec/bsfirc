@@ -368,3 +368,36 @@ irc_whois_server(void *h, char *nick, char *server, char *serverdescr)
     printf(":: [%s] on: %s (%s)\n", nick, server, serverdescr);
     show_prompt();
 }
+
+/* PROTO */
+void
+irc_whois_idletime(void *h, char *nick, int idlesecs)
+{
+    int days, hours, mins, secs;
+
+    days = idlesecs / 86400;
+    idlesecs = idlesecs % 86400;
+
+    hours = idlesecs / 3600;
+    idlesecs = idlesecs % 3600;
+
+    mins = idlesecs / 60;
+    idlesecs = idlesecs % 60;
+
+    secs = idlesecs;
+
+    eraseline();
+    printf(":: [%s]     idle ", nick);
+
+    if(days > 0)
+	printf("%dd", days);
+    if(hours > 0)
+	printf("%dh", hours);
+    if(mins > 0)
+	printf("%dm", mins);
+    if(secs > 0)
+	printf("%ds", secs);
+
+    printf("\n");
+    show_prompt();
+}
