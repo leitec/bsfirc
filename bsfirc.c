@@ -12,7 +12,7 @@ struct Waiting *waiting = NULL;
 int
 main(int argc, char **argv)
 {
-    char           *ircsrv, *ircnick, *ircname, *user;
+    char           *ircsrv, *ircnick, *ircname, *irchost, *user;
     fd_set          readfs;
     struct timeval  tm;
 
@@ -36,6 +36,9 @@ main(int argc, char **argv)
     if (ircname == NULL) {
 	ircname = strdup("bsfirc user");
     }
+
+    irchost = getenv("IRCHOST");
+
     setup_tty();
     get_screen_size();
 
@@ -74,6 +77,9 @@ main(int argc, char **argv)
     irclib_setname(bsfirc->handle, ircname);
     irclib_setusername(bsfirc->handle, user);
     bsfirc->nick = strdup(ircnick);
+
+    if(irchost != NULL)
+	    irclib_sethostname(bsfirc->handle, irchost);
 
     irclib_register_callback(bsfirc->handle, IRCLIB_MOTD, (void (*) (void *,...)) irc_motd);
     irclib_register_callback(bsfirc->handle, IRCLIB_READY, (void (*) (void *,...)) irc_ready);
