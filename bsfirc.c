@@ -12,7 +12,8 @@ struct Waiting *waiting = NULL;
 int
 main(int argc, char **argv)
 {
-    char           *ircsrv, *ircnick, *ircname, *irchost, *user;
+    char           *ircsrv, *ircnick, *ircname, *irchost, *user, *ircver;
+    uint8_t	    version;
     fd_set          readfs;
     struct timeval  tm;
 
@@ -36,7 +37,13 @@ main(int argc, char **argv)
     if (ircname == NULL) {
 	ircname = strdup("bsfirc user");
     }
-
+    ircver = getenv("IRCVER");
+    if (ircver == NULL) {
+	    version = 0;
+    } else {
+	    version = strtoul(ircver, (char **)NULL, 10);
+    }
+	
     irchost = getenv("IRCHOST");
 
     setup_tty();
@@ -108,7 +115,7 @@ main(int argc, char **argv)
 
     printf(":: bsfirc started.\n");
     printf(":: Server set to %s.\n", ircsrv);
-    irclib_connect(bsfirc->handle, ircsrv, 6667);
+    irclib_connect(bsfirc->handle, ircsrv, 6667, version);
 
     while (!irclib_connected(bsfirc->handle));
     printf(":: Connected.\n");

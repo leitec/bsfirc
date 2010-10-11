@@ -54,7 +54,7 @@ show_channel_users(char *chan)
 	    }
 
 	    addts();
-	    printf(" Users in %s: (%d)\n", tr->chan, tr->num);
+	    printf(" Users in %s: (%lu)\n", tr->chan, tr->num);
 
 	    for (row = 0; row < percol; row++) {
 		/* print every [percol+row] user */
