@@ -39,6 +39,20 @@ addts_short(void)
 
 /* PROTO */
 void
+addts_date(void)
+{
+    char            ts[12];
+    struct tm      *now;
+    time_t          t;
+
+    t = time(0);
+    now = localtime(&t);
+    strftime(ts, 12, "%m/%d %H:%M", now);
+    printf("%s", ts);
+}
+
+/* PROTO */
+void
 spaces(int num)
 {
     int             i;

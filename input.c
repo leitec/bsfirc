@@ -197,9 +197,9 @@ parse_input(void)
 	if (dest[0] == '#' || dest[0] == '&') {
 	    putchar('(');
 #ifdef TIMESTAMPS_CHANMSG
-	    addts_short();
+	    addts_date();
 	    putchar('/');
-	    offset = 6;
+	    offset = 12;
 #else
 	    offset = 0;
 #endif

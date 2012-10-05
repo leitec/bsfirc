@@ -284,9 +284,9 @@ irc_msg(void *h, char *nick, char *host, char *target, char *msg)
     if (target[0] == '#' || target[0] == '&') {
 	putchar('(');
 #ifdef TIMESTAMPS_CHANMSG
-	addts_short();
+	addts_date();
 	putchar('/');
-	offset = 6;
+	offset = 12;
 #else
 	offset = 0;
 #endif
